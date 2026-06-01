@@ -92,6 +92,16 @@ sudo apt-get install -y espeak-ng    # offline TTS
 python3 scripts/build_audio.py       # writes assets/vo_placeholder.mp3 + timings.json
 ```
 
+## Logo
+
+The **ImpΛctBuying** lockup *with* the "Proven Positive Impact" payoff is drawn
+as vector (white) in `index.html` via `buildLogo()` — the official
+`Logo-met-payoff.svg` couldn't be downloaded here (the host is outside this
+sandbox's network allowlist). If you'd like the exact source SVG embedded,
+drop the file in `assets/logo.svg` and point `buildLogo()` at it (or paste its
+`<path>` data over the recreated triangle). It currently appears in Scene 3
+(small) and the Scene 4 end card (large).
+
 ## Brand tokens (from the PPWR white paper)
 
 - **Background:** `#003038` / `#0e2232` (deep teal-navy)
