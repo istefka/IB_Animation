@@ -1,0 +1,5 @@
+# build / intermediate artifacts (regenerable)
+build/
+scripts/_audio_build/
+node_modules/
+*.log
