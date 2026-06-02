@@ -152,11 +152,16 @@ em{font-style:normal;color:var(--teal-l);}
 .pillar .pic{width:72px;height:72px;border-radius:16px;display:grid;place-items:center;background:var(--mint);box-shadow:0 16px 48px rgba(0,8,12,.4);}
 .pillar .pic svg{width:36px;height:36px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .pillar .pw{font-weight:700;font-size:36px;letter-spacing:-.02em;color:var(--teal-l);}
-.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;}
-.endcard .desc{margin-top:44px;font-size:44px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1;}
+.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 130px;gap:0;}
+.endcard .logo-wrap{display:flex;align-items:center;gap:0;}
+.endcard .desc{margin-top:48px;font-size:62px;font-weight:700;color:#fff;letter-spacing:-.025em;line-height:1.1;}
 .endcard .desc em{font-style:normal;color:var(--teal-l);font-weight:800;}
-.endcard .url{margin-top:48px;font-size:18px;letter-spacing:.35em;text-transform:uppercase;color:var(--teal-l);font-weight:600;
-  padding:16px 40px;border:1.5px solid rgba(112,203,214,.3);border-radius:40px;background:rgba(5,148,163,.06);}
+.endcard .url{margin-top:32px;font-size:17px;letter-spacing:.01em;color:var(--teal-l);font-weight:500;opacity:.85;}
+.endcard .ticker-wrap{position:absolute;bottom:60px;left:0;right:0;overflow:hidden;}
+.endcard .ticker-label{text-align:center;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:500;margin-bottom:20px;}
+.endcard .ticker{display:flex;gap:60px;animation:tickerScroll 20s linear infinite;align-items:center;white-space:nowrap;}
+.endcard .ticker img{height:32px;opacity:.5;filter:brightness(0) invert(1);transition:opacity .3s;}
+@keyframes tickerScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* envelope band */
 .envelope{position:absolute;left:0;right:0;bottom:0;height:220px;z-index:4;pointer-events:none;
@@ -303,9 +308,14 @@ body.clean #ui,body.clean .hint{display:none;}
       </div>
     </div>
     <div class="endcard">
-      <div class="r sc" data-in="42.0"><span class="logo" data-logo data-size="130"></span></div>
+      <div class="logo-wrap r sc" data-in="42.0"><span class="logo" data-logo data-size="90"></span></div>
       <div class="desc r d1" data-in="42.5"><em>Decision Intelligence</em> Provider</div>
-      <div class="url r d2" data-in="43.0">impactbuying.com</div>
+      <div class="url r d2" data-in="43.0">www.impactbuying.com</div>
+      <div class="ticker-wrap r" data-in="43.5">
+        <div class="ticker-label">Trusted by leading brands worldwide</div>
+        <div class="ticker" id="logoTicker">
+        </div>
+      </div>
     </div>
   </section>
 
@@ -467,8 +477,8 @@ const VIZ=(()=>{
       if(n.g)n.g.setAttribute('transform',`translate(${pos.x.toFixed(1)} ${pos.y.toFixed(1)})`);
     });
 
-    // Circle visibility — fade out as morph progresses
-    circleEl.style.opacity=morphT<0.3?'1':morphT<0.6?String(1-(morphT-0.3)/0.3):'0';
+    // Circle visibility — hide once morph starts
+    circleEl.style.opacity=now<28.0?'1':'0';
 
     // Chain path — fade in as morph progresses
     if(morphT>0.3){
