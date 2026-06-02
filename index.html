@@ -491,10 +491,23 @@ const q=new URLSearchParams(location.search);
 if(q.get('clean'))document.body.classList.add('clean');
 if(q.get('slots'))document.body.classList.add('show-slots');
 if(q.get('nocap'))document.body.classList.add('no-captions');
-if(q.get('auto')){const go=()=>{play();removeEventListener('pointerdown',go);};addEventListener('pointerdown',go);setTimeout(play,300);}
 
 setStateAt(0);
 window.renderAt=t=>setStateAt(Math.min(t,END));
+
+/* Auto-play on open. Visuals run immediately via the RAF clock; browsers block
+   autoplay AUDIO without a user gesture, so the first click/key starts the
+   voiceover (and re-syncs it to the running clock) without disturbing playback. */
+let soundArmed=false;
+function armSound(){
+  if(soundArmed)return; soundArmed=true;
+  try{vo.currentTime=clock;}catch(e){}
+  if(playing)vo.play().catch(()=>{});
+  removeEventListener('pointerdown',armSound);removeEventListener('keydown',armSound);
+}
+addEventListener('pointerdown',armSound);
+addEventListener('keydown',armSound);
+play();   // start the moment the page loads
 window.ANIM_END=END;window.ANIM_DURATION=TIMINGS.duration;
 </script>
 </body>
