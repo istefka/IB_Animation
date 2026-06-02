@@ -448,19 +448,31 @@ function setStateAt(now){
 }
 function fmt(s){s=Math.max(0,s|0);return (s/60|0)+':'+String(s%60).padStart(2,'0');}
 
-/* ---- clock ---- */
-let playing=false,rafClock=0,lastTS=0;
-function audioLeading(){return !vo.paused&&!vo.error&&!isNaN(vo.duration);}
-function loop(ts){const dt=lastTS?(ts-lastTS)/1000:0;lastTS=ts;let t;
-  if(audioLeading()){t=vo.currentTime;rafClock=t;}else{if(playing)rafClock+=dt;t=rafClock;}
-  if(playing&&t>=END)restart();setStateAt(Math.min(t,END));requestAnimationFrame(loop);}
+/* ---- clock ----
+   The RAF clock is ALWAYS the master, so visuals advance the moment you press
+   Play — even if the browser blocks audio or the <audio> stalls at 0 (common on
+   file://). The voiceover just rides alongside and is nudged back into sync if
+   it drifts. */
+let playing=false,clock=0,lastTS=0;
+function loop(ts){
+  const dt=lastTS?Math.min((ts-lastTS)/1000,0.1):0; lastTS=ts;
+  if(playing){
+    clock+=dt;
+    if(!vo.error && !isNaN(vo.duration) && clock<=vo.duration){
+      if(Math.abs(vo.currentTime-clock)>0.25){ try{vo.currentTime=clock;}catch(e){} }
+    }
+    if(clock>=END){ restart(); }
+  }
+  setStateAt(Math.min(clock,END));
+  requestAnimationFrame(loop);
+}
 requestAnimationFrame(loop);
 
 const btnPlay=$('#btnPlay');
-function play(){playing=true;btnPlay.textContent='❚❚ Pause';vo.play().catch(()=>{});}
+function play(){playing=true;btnPlay.textContent='❚❚ Pause';lastTS=0;vo.play().catch(()=>{});}
 function pause(){playing=false;btnPlay.textContent='▶ Play';vo.pause();}
-function restart(){rafClock=0;VIZ.reset();prevWipe=-1;try{vo.currentTime=0;}catch(e){}if(playing)vo.play().catch(()=>{});setStateAt(0);}
-function seek(t){rafClock=t;try{vo.currentTime=t;}catch(e){}setStateAt(t);}
+function restart(){clock=0;VIZ.reset();prevWipe=-1;try{vo.currentTime=0;}catch(e){}if(playing)vo.play().catch(()=>{});setStateAt(0);}
+function seek(t){clock=t;try{vo.currentTime=t;}catch(e){}setStateAt(t);}
 
 btnPlay.onclick=()=>playing?pause():play();
 $('#btnRestart').onclick=()=>{restart();if(!playing)play();};
