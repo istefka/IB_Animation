@@ -99,10 +99,13 @@ em{font-style:normal;color:var(--teal-l);}
 .s2-card p b{color:var(--teal-l);font-weight:600;}
 
 /* ============ BRIDGE ============ */
-#bridge{flex-direction:column;}
-.bridge-logo{margin-bottom:20px;}
-.bridge-title{font-weight:700;font-size:64px;line-height:1.1;letter-spacing:-.02em;text-align:center;}
-.bridge-sub{margin-top:28px;font-size:22px;font-weight:400;line-height:1.6;color:rgba(255,255,255,.78);text-align:center;max-width:640px;}
+#bridge{flex-direction:row;padding:0 100px;justify-content:space-between;align-items:center;}
+.bridge-left{display:flex;flex-direction:column;justify-content:center;max-width:640px;}
+.bridge-logo{margin-bottom:32px;}
+.bridge-title{font-weight:800;font-size:92px;line-height:1.0;letter-spacing:-.035em;text-align:left;}
+.bridge-sub{margin-top:24px;font-size:24px;font-weight:400;line-height:1.6;color:rgba(255,255,255,.78);text-align:left;max-width:560px;}
+.bridge-sub em{color:var(--teal-l);font-style:normal;}
+.bridge-img{width:420px;height:420px;object-fit:contain;}
 
 /* ============ SCENE 3 — SOLUTION ============ */
 #s3{padding:0 130px;justify-content:space-between;}
@@ -235,13 +238,14 @@ body.clean #ui,body.clean .hint{display:none;}
 
   <!-- ============ BRIDGE ============ -->
   <section class="slide" id="bridge" data-in="12.6" data-out="18.05">
-    <div class="bridge-logo r" data-in="13.0"><span class="logo" data-logo data-size="44"></span></div>
-    <div class="bridge-title">
-      <span class="ln" data-in="13.4"><span class="lw"><em>Decision</em></span></span><br/>
-      <span class="ln" data-in="13.7"><span class="lw"><em>Intelligence</em> Provider</span></span>
+    <div class="bridge-left">
+      <div class="bridge-logo r" data-in="13.0"><span class="logo" data-logo data-size="44"></span></div>
+      <div class="bridge-title">
+        <span class="ln" data-in="13.4"><span class="lw">ImpactBuying.</span></span>
+      </div>
+      <p class="bridge-sub r d3" data-in="14.2">Decision intelligence for <em>FMCG supply chains</em>.</p>
     </div>
-    <div class="rule r d2" data-in="14.1"></div>
-    <p class="bridge-sub r d3" data-in="14.5">We turn supply-chain complexity into decisions you can trust.</p>
+    <img class="bridge-img r sc" data-in="13.6" src="./photo-thing.png" alt=""/>
   </section>
 
   <!-- ============ SCENE 3 — SOLUTION ============ -->
