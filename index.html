@@ -109,7 +109,8 @@ em{font-style:normal;color:var(--teal-l);}
 /* ============ SCENE 3 — SOLUTION ============ */
 #s3{padding:0 130px;justify-content:space-between;}
 .s3-left{width:680px;position:relative;height:540px;}
-.s3-right{width:540px;height:480px;position:relative;}
+.s3-right{width:540px;height:480px;position:relative;transition:transform 1.0s var(--ease-io);}
+.s3-right.viz-center{transform:translateX(-180px) scale(1.25);}
 .s3-lead{position:absolute;left:0;top:40px;width:680px;opacity:1;transform:translateY(0);
   transition:opacity 0.7s var(--ease-io),transform 0.7s var(--ease-io);}
 .s3-lead.phase-out{opacity:0;transform:translateY(-10px);pointer-events:none;}
@@ -462,6 +463,8 @@ function setStateAt(now){
   const s3Lead=$('.s3-lead'),s3Caps=$('.s3-caps');
   if(s3Lead)s3Lead.classList.toggle('phase-out',now>=26.4);
   if(s3Caps)s3Caps.classList.toggle('phase-in',now>=26.7);
+  const s3Right=$('.s3-right');
+  if(s3Right)s3Right.classList.toggle('viz-center',now>=26.4&&now<29.8);
   envelope.classList.toggle('shown',now>=35.1&&now<END);
   brandChrome.classList.toggle('hide',(now>=15.1&&now<20.5)||now>=35.1);
 
