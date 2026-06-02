@@ -29,23 +29,28 @@ scripts/
 
 ## The script (synced to the timeline)
 
+Synced to the real voiceover (`assets/voiceover.mp3`, ~37.1s; the animation
+holds the end card to ~42s, then loops). Exact per-line timings live in
+`assets/timings.json`.
+
 | Scene | Time | Voiceover |
 |------|------|-----------|
-| 1 · Hook | 0–4.5s | *The rules of global trade are changing.* |
-| 2 · Pressure | 5–23s | *Consumers demand transparency. Governments are introducing stricter ESG legislation. And businesses are expected to prove where products come from and how they impact people and the planet.* |
-| 3 · Solution | 24–46s | *At ImpactBuying, we help businesses transform complex supply chains into opportunities for positive impact. Using smart supply chain intelligence and ESG expertise, we uncover risks, improve transparency, and support responsible sourcing.* |
-| 4 · Close | 46–56s | *Together, we create supply chains that are better for business, people, and the planet.* |
+| 1 · Hook | 0–2.9s | *The rules of global trade are changing.* |
+| 2 · Pressure | 3–18s | *Consumers demand transparency. Governments are introducing stricter ESG legislation. And businesses are expected to prove where products come from and how they impact people and the planet.* |
+| 3 · Solution | 18–32s | *At ImpactBuying, we help businesses transform complex supply chains into opportunities for positive impact. Using smart supply chain intelligence and ESG expertise, we uncover risks, improve transparency, and support responsible sourcing.* |
+| 4 · Close | 32–42s | *Together, we create supply chains that are better for business, people, and the planet.* |
 
-## ⚠️ The voiceover is a placeholder
+## Voiceover
 
-`assets/vo_placeholder.mp3` is a **robotic** offline TTS render, just for pacing.
-Drop in your real VO when ready:
+The animation plays the real voiceover, `assets/voiceover.mp3` (~37.1s). The
+visuals are locked to it via the `TIMINGS` block and `data-in` / `data-out`
+attributes (seconds) in `index.html`; line boundaries were derived from the
+audio with silence detection. `assets/vo_placeholder.mp3` (a robotic offline
+TTS render) is kept only as a fallback reference.
 
-1. Replace `assets/vo_placeholder.mp3` with your file (keep the name, or update
-   the `<audio src>` in `index.html`).
-2. If your VO's pacing differs, retime the visuals: edit the `TIMINGS` block and
-   the `data-in` attributes in `index.html` (both are in seconds), or re-run the
-   builder against new timings.
+To swap in a different VO: replace `assets/voiceover.mp3` (or update the
+`<audio src>`), then adjust the `TIMINGS` / `data-in` / `data-out` values if the
+pacing changed.
 
 ## 🎬 Video-footage placeholders
 
