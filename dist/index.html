@@ -353,7 +353,9 @@ const stage=$('#stage'),vo=$('#vo'),capEl=$('#cap'),xfadeEl=$('#xfade'),envelope
 const slides=$$('.slide'),reveals=$$('[data-in]').filter(e=>!e.classList.contains('slide'));
 
 function buildLogo(el){const h=+(el.dataset.size||60);el.classList.add('logo');
-  el.innerHTML=`<img class="logo-img" src="assets/logo.svg" alt="ImpactBuying" style="height:${h}px">`;}
+  const chromeImg=document.querySelector('.chrome img');
+  const logoSrc=chromeImg?chromeImg.src:'assets/logo.svg';
+  el.innerHTML=`<img class="logo-img" src="${logoSrc}" alt="ImpactBuying" style="height:${h}px">`;}
 $$('[data-logo]').forEach(buildLogo);
 
 /* ============================================================
