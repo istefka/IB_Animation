@@ -107,17 +107,16 @@ em{font-style:normal;color:var(--teal-l);}
 .bridge-img{height:100%;max-height:600px;width:auto;object-fit:contain;}
 
 /* ============ SCENE 3 — SOLUTION ============ */
-#s3{padding:0 130px;}
-.s3-left{position:absolute;left:130px;top:50%;transform:translateY(-50%) translateX(-40px);width:680px;opacity:0;transition:opacity .8s var(--ease),transform .8s var(--ease);}
-.s3-left.phase-in{opacity:1;transform:translateY(-50%) translateX(0);}
-.s3-right{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.3);width:540px;height:480px;transition:transform 1.2s var(--ease-io),left 1.2s var(--ease-io);}
-.s3-right.viz-split{left:72%;transform:translate(-50%,-50%) scale(1);}
-.s3-lead{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:680px;text-align:center;opacity:1;z-index:2;
+#s3{padding:0 130px;justify-content:space-between;}
+.s3-left{width:680px;position:relative;height:540px;}
+.s3-right{width:540px;height:480px;position:relative;transition:transform 1.2s var(--ease-io);}
+.s3-right.viz-center{transform:translateX(-260px) scale(1.55);}
+.s3-lead{position:absolute;left:0;top:40px;width:680px;opacity:1;transform:translateY(0);
   transition:opacity 0.7s var(--ease-io),transform 0.7s var(--ease-io);}
-.s3-lead.phase-out{opacity:0;transform:translate(-50%,-50%) scale(0.97);pointer-events:none;}
+.s3-lead.phase-out{opacity:0;transform:translateY(-10px);pointer-events:none;}
 .s3-lead h2{font-weight:700;font-size:66px;line-height:1.08;letter-spacing:-.025em;}
 .s3-lead .rule{margin-top:30px;}
-.s3-lead p{margin-top:26px;font-size:22px;font-weight:400;line-height:1.55;color:rgba(255,255,255,.78);max-width:560px;margin-left:auto;margin-right:auto;}
+.s3-lead p{margin-top:26px;font-size:22px;font-weight:400;line-height:1.55;color:rgba(255,255,255,.78);max-width:560px;}
 .s3-lead p em{font-style:normal;color:var(--teal-l);}
 .s3-caps{position:absolute;left:0;top:30px;width:680px;opacity:0;transform:translateY(20px);
   transition:opacity 0.8s var(--ease-io),transform 0.8s var(--ease-io);}
@@ -162,8 +161,8 @@ em{font-style:normal;color:var(--teal-l);}
 .endcard .ticker-wrap{position:absolute;bottom:50px;left:0;right:0;overflow:hidden;}
 .endcard .ticker-label{text-align:center;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ffffff;font-weight:400;margin-bottom:16px;}
 .endcard .ticker-track{display:flex;animation:tickerScroll 60s linear infinite;align-items:center;white-space:nowrap;width:max-content;}
-.endcard .ticker-item{flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:10px;padding:12px;margin:0 10px;width:64px;height:64px;}
-.endcard .ticker-item img{width:40px;height:40px;object-fit:contain;}
+.endcard .ticker-item{flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:10px;padding:10px 20px;margin:0 12px;height:48px;min-width:100px;}
+.endcard .ticker-item img{height:28px;max-width:100px;object-fit:contain;}
 @keyframes tickerScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* envelope band */
@@ -261,18 +260,18 @@ body.clean #ui,body.clean .hint{display:none;}
 
   <!-- ============ SCENE 3 — SOLUTION ============ -->
   <section class="slide" id="s3" data-in="20.3" data-out="35.0">
-    <!-- phase A: centered text overlay -->
-    <div class="s3-lead">
-      <h2>
-        <span class="ln" data-in="20.5" data-out="26.4"><span class="lw">We turn <em>complex</em></span></span><br/>
-        <span class="ln" data-in="20.75" data-out="26.4"><span class="lw"><em>supply chains</em></span></span><br/>
-        <span class="ln" data-in="21.0" data-out="26.4"><span class="lw">into positive impact.</span></span>
-      </h2>
-      <div class="rule r d2" data-in="21.4" data-out="26.4"></div>
-      <p class="r d3" data-in="21.8" data-out="26.4">Smart supply-chain intelligence, built for <em>decisions</em>.</p>
-    </div>
-    <!-- phase B: left panel -->
     <div class="s3-left">
+      <!-- phase A -->
+      <div class="s3-lead">
+        <h2>
+          <span class="ln" data-in="20.5" data-out="26.4"><span class="lw">We turn <em>complex</em></span></span><br/>
+          <span class="ln" data-in="20.75" data-out="26.4"><span class="lw"><em>supply chains</em></span></span><br/>
+          <span class="ln" data-in="21.0" data-out="26.4"><span class="lw">into positive impact.</span></span>
+        </h2>
+        <div class="rule r d2" data-in="21.4" data-out="26.4"></div>
+        <p class="r d3" data-in="21.8" data-out="26.4">Smart supply-chain intelligence, built for <em>decisions</em>.</p>
+      </div>
+      <!-- phase B -->
       <div class="s3-caps">
         <div class="lbl r" data-in="26.8">Smart technology + ESG expertise</div>
         <div class="rule r d1" data-in="26.9"></div>
@@ -585,10 +584,8 @@ function setStateAt(now){
   const s3Lead=$('.s3-lead'),s3Caps=$('.s3-caps');
   if(s3Lead)s3Lead.classList.toggle('phase-out',now>=26.4);
   if(s3Caps)s3Caps.classList.toggle('phase-in',now>=26.7);
-  const s3Left=$('.s3-left');
-  if(s3Left)s3Left.classList.toggle('phase-in',now>=26.7);
   const s3Right=$('.s3-right');
-  if(s3Right){s3Right.classList.toggle('viz-center',now<26.4);s3Right.classList.toggle('viz-split',now>=26.4);}
+  if(s3Right)s3Right.classList.toggle('viz-center',now>=26.4&&now<29.8);
   const envShown = now>=35.1&&now<END;
   envelope.classList.toggle('shown', envShown);
   envelope.classList.toggle('white', now>=42.0);
