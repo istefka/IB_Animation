@@ -24,7 +24,7 @@
   --teal-950:#003038;--teal-700:#00818f;--teal-600:#0594a3;--teal-500:#06a9ba;
   --teal-400:#32b3c8;--teal-300:#70cbd6;--teal-200:#a8e2e9;--teal-100:#d8f3f6;
   --font:'Poppins',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
-  --e:cubic-bezier(.2,.75,.2,1);--eio:cubic-bezier(.76,0,.24,1);
+  --e:cubic-bezier(0.16,1,0.3,1);--eio:cubic-bezier(0.4,0,0.2,1);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;background:#02141d;overflow:hidden;font-family:var(--font);}
@@ -60,8 +60,8 @@ body:not(.show-slots) .video-slot .ph::after{display:none;}
 .scene{position:absolute;inset:0;z-index:3;display:flex;align-items:center;padding:0 132px;
   opacity:0;visibility:hidden;pointer-events:none;}
 .scene.is-pre{opacity:0;visibility:hidden;}
-.scene.is-in{opacity:1;visibility:visible;transition:opacity .65s var(--e);}
-.scene.is-out{opacity:0;visibility:visible;transform:translateY(-16px) scale(.995);filter:blur(2px);transition:opacity .6s var(--e),transform .6s var(--e),filter .6s var(--e);}
+.scene.is-in{opacity:1;visibility:visible;transition:opacity 0.2s var(--e);}
+.scene.is-out{opacity:0;visibility:visible;transform:translateY(-10px);transition:opacity 0.5s var(--e),transform 0.5s var(--e);}
 
 /* shared brand type */
 h1 em,h2 em,.h1 em{font-style:normal;color:var(--teal-l);}
@@ -69,15 +69,15 @@ h1 em,h2 em,.h1 em{font-style:normal;color:var(--teal-l);}
 .eyebrow .pin{width:34px;height:2px;background:var(--teal-l);box-shadow:0 0 10px var(--teal-l);}
 .rule{width:96px;height:6px;border-radius:4px;background:var(--teal-l);}
 
-/* reveal primitives */
-.r{opacity:0;transform:translateY(26px);filter:blur(8px);transition:opacity .7s var(--e),transform .7s var(--e),filter .7s var(--e);}
-.r.shown{opacity:1;transform:none;filter:none;}
-.r.gone{opacity:0;transform:translateY(-22px);filter:blur(6px);}
-.r.sc{transform:translateY(0) scale(.9);}.r.sc.shown{transform:scale(1);}.r.sc.gone{transform:scale(1.04);opacity:0;}
-.r.d1{transition-delay:.05s}.r.d2{transition-delay:.1s}.r.d3{transition-delay:.15s}
+/* reveal primitives — no blur, expo-out easing, staggered cascade */
+.r{opacity:0;transform:translateY(14px);transition:opacity 0.85s var(--e),transform 0.85s var(--e);}
+.r.shown{opacity:1;transform:none;}
+.r.gone{opacity:0;transform:translateY(-10px);transition:opacity 0.45s var(--e),transform 0.45s var(--e);}
+.r.sc{transform:translateY(0) scale(.92);}.r.sc.shown{transform:scale(1);}.r.sc.gone{transform:scale(1.03);opacity:0;}
+.r.d1{transition-delay:.08s}.r.d2{transition-delay:.18s}.r.d3{transition-delay:.28s}
 .line{display:inline-block;overflow:hidden;vertical-align:bottom;padding:.06em 0;}
-.line .iw{display:inline-block;transform:translateY(118%);transition:transform .8s var(--eio);}
-.line.shown .iw{transform:translateY(0);}.line.gone .iw{transform:translateY(-118%);}
+.line .iw{display:inline-block;transform:translateY(108%);transition:transform 0.85s var(--eio);}
+.line.shown .iw{transform:translateY(0);}.line.gone .iw{transform:translateY(-108%);}
 
 /* SCENE 1 */
 #s1{flex-direction:column;align-items:flex-start;justify-content:center;}
@@ -85,7 +85,7 @@ h1 em,h2 em,.h1 em{font-style:normal;color:var(--teal-l);}
 .h1{font-weight:600;font-size:112px;line-height:1.02;letter-spacing:-.022em;max-width:1260px;}
 .h1 .under{position:relative;}
 .h1 .under::after{content:"";position:absolute;left:.02em;right:.02em;bottom:-.04em;height:7px;border-radius:6px;
-  background:var(--teal-l);transform:scaleX(0);transform-origin:left;transition:transform .7s var(--e) .3s;}
+  background:var(--teal-l);transform:scaleX(0);transform-origin:left;transition:transform 0.9s var(--e) .2s;}
 .h1 .under.shown::after{transform:scaleX(1);}
 #s1 .rule{margin-top:46px;}
 
@@ -194,11 +194,11 @@ body.no-captions .captions{display:none;}
 .wipe .panel::after{content:'';position:absolute;top:0;bottom:0;right:-1px;width:2px;
   background:linear-gradient(180deg,transparent 0%,rgba(112,203,214,.9) 20%,#06a9ba 50%,rgba(112,203,214,.9) 80%,transparent 100%);
   box-shadow:0 0 22px 9px rgba(6,169,186,.65);}
-.wipe.sweep .panel{animation:slide-wipe 1.15s cubic-bezier(.76,0,.24,1) forwards;}
+.wipe.sweep .panel{animation:slide-wipe 1.0s cubic-bezier(0.76,0,0.24,1) forwards;}
 @keyframes slide-wipe{
   0%  {transform:translateX(-105%);}
-  42% {transform:translateX(0%);}
-  58% {transform:translateX(0%);}
+  44% {transform:translateX(0%);}
+  56% {transform:translateX(0%);}
   100%{transform:translateX(105%);}}
 
 /* UI */
