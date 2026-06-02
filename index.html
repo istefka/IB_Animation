@@ -136,9 +136,12 @@ em{font-style:normal;color:var(--teal-l);}
 .viz svg{width:100%;height:100%;overflow:visible;}
 .node circle{transition:all .6s var(--ease);}
 .node .ring{opacity:0;transform-origin:center;}
-.node.hot .ring{animation:ring-pulse 1.2s var(--ease);}
-@keyframes ring-pulse{0%{opacity:.8;transform:scale(.5)}100%{opacity:0;transform:scale(2)}}
-.node .ic{stroke:#bfeef4;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.node.hot .ring{animation:ring-pulse 1.6s var(--ease) forwards;}
+@keyframes ring-pulse{0%{opacity:.7;transform:scale(.6)}60%{opacity:.3;transform:scale(1.6)}100%{opacity:0;transform:scale(2.2)}}
+.node .ic{stroke:#bfeef4;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke .5s var(--ease);}
+.node.hot .ic{stroke:#7ef0c0;}
+.node.hot circle:not(.ring){fill:rgba(16,185,129,.18) !important;stroke:#7ef0c0 !important;transition:all .5s var(--ease);}
 
 /* ============ SCENE 4 — CLOSE ============ */
 #s4{flex-direction:column;}
@@ -382,16 +385,25 @@ const VIZ=(()=>{
     if(!pathEl)return;
     const active=now>=18.1&&now<32.0;svg.style.opacity=active?1:0;
     const dp=Math.max(0,Math.min(1,(now-19.2)/3.0));pathEl.style.strokeDashoffset=(L*(1-dp)).toFixed(1);
-    nodes.forEach((n,i)=>{const on=now>=19.6+i*0.5;n.g.style.transition='opacity .6s, transform .6s';n.g.style.opacity=on?1:0;n.core.style.transform=on?'scale(1)':'scale(.4)';});
+    nodes.forEach((n,i)=>{const on=now>=19.6+i*0.5;n.g.style.transition='opacity .6s var(--ease-io), transform .6s var(--ease-io)';n.g.style.opacity=on?1:0;n.core.style.transform=on?'scale(1)':'scale(.4)';});
     const flowing=now>=22.0&&active;
-    parts.forEach(p=>{if(!flowing){p.el.style.opacity=0;return;}p.el.style.opacity=.9;const pos=((now*0.08)+p.off)%1,pt=pathEl.getPointAtLength(pos*L);p.el.setAttribute('cx',pt.x);p.el.setAttribute('cy',pt.y);});
-    hot(1,now>=24.6&&now<25.4);
-    glowPath(now>=27.0&&now<28.8,now);
-    hot(4,now>=29.8&&now<30.6);
+    parts.forEach(p=>{if(!flowing){p.el.style.opacity=0;return;}p.el.style.opacity=.85;const pos=((now*0.07)+p.off)%1,pt=pathEl.getPointAtLength(pos*L);p.el.setAttribute('cx',pt.x);p.el.setAttribute('cy',pt.y);});
+    // Capability 1 "Uncover risks" -> highlight node 1 (factory)
+    hot(1,now>=24.4&&now<25.6);
+    // Capability 2 "Improve transparency" -> highlight nodes 2,3 (logistics, retail) + glow path
+    hot(2,now>=25.8&&now<27.0);
+    hot(3,now>=26.2&&now<27.0);
+    glowPath(now>=25.8&&now<27.0,now,25.8);
+    // Capability 3 "Responsible sourcing" -> highlight node 0,4 (nature endpoints)
+    hot(0,now>=27.2&&now<28.6);
+    hot(4,now>=27.5&&now<28.6);
   }
-  function hot(i,on){const n=nodes[i];if(!n.g)return;if(on&&!prevHot[i]){n.g.classList.remove('hot');void n.g.offsetWidth;n.g.classList.add('hot');n.core.setAttribute('fill','rgba(16,185,129,.2)');n.core.setAttribute('stroke','#7ef0c0');}prevHot[i]=on||prevHot[i];}
-  function glowPath(on,now){const g=$('#vizglow');if(!g)return;g.style.opacity=on?0.85:0;if(on){const dp=Math.min(1,(now-27.0)/1.2);g.style.strokeDasharray=L;g.style.strokeDashoffset=(L*(1-dp)).toFixed(1);}}
-  function reset(){prevHot={};nodes.forEach(n=>{if(n.core){n.core.setAttribute('fill','rgba(0,129,143,.2)');n.core.setAttribute('stroke','rgba(112,203,214,.5)');}});}
+  function hot(i,on){const n=nodes[i];if(!n.g)return;
+    if(on&&!prevHot[i]){n.g.classList.remove('hot');void n.g.offsetWidth;n.g.classList.add('hot');}
+    if(!on&&prevHot[i]){n.g.classList.remove('hot');}
+    prevHot[i]=on;}
+  function glowPath(on,now,start){const g=$('#vizglow');if(!g)return;g.style.transition='opacity .5s var(--ease-io)';g.style.opacity=on?0.8:0;if(on){const dp=Math.min(1,(now-start)/1.0);g.style.strokeDasharray=L;g.style.strokeDashoffset=(L*(1-dp)).toFixed(1);}}
+  function reset(){prevHot={};nodes.forEach(n=>{if(n.g){n.g.classList.remove('hot');}});}
   return {build,frame,reset};
 })();
 VIZ.build();
@@ -408,7 +420,7 @@ function setStateAt(now){
   VIZ.frame(now);
   const s3Lead=$('.s3-lead'),s3Caps=$('.s3-caps');
   if(s3Lead)s3Lead.classList.toggle('phase-out',now>=23.4);
-  if(s3Caps)s3Caps.classList.toggle('phase-in',now>=23.6);
+  if(s3Caps)s3Caps.classList.toggle('phase-in',now>=23.8);
   envelope.classList.toggle('shown',now>=32.15&&now<END);
   brandChrome.classList.toggle('hide',(now>=12.6&&now<18.3)||now>=32.15);
 
