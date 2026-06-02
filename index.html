@@ -358,52 +358,133 @@ $$('[data-logo]').forEach(buildLogo);
 const VIZ=(()=>{
   const NS='http://www.w3.org/2000/svg',svg=$('#vizsvg');
   const nodes=[
-    {x:60,y:270, ic:'M12 3 C8 7 8 12 12 16 C16 12 16 7 12 3 Z M12 16 v5'},
-    {x:190,y:150,ic:'M4 20V9l5-3v3l5-3v3l5-3v11z M4 20h16'},
-    {x:310,y:300,ic:'M2 7h11v8H2z M13 10h5l3 3v2h-8z M5.5 18a1.6 1.6 0 1 0 0-.1 M17 18a1.6 1.6 0 1 0 0-.1'},
-    {x:430,y:150,ic:'M5 9l1.5-4h11L19 9 M5 9h14v10H5z M9 19v-5h6v5'},
-    {x:540,y:270,ic:'M12 20s-6-3.5-6-9a6 6 0 0 1 12 0c0 5.5-6 9-6 9z M12 6c-2.5 1.7-2.5 5 0 7 2.5-1.7 2.5-5 0-7z'},
+    {x:60,y:270, ic:'M12 3 C8 7 8 12 12 16 C16 12 16 7 12 3 Z M12 16 v5', label:'Origin'},
+    {x:190,y:150,ic:'M4 20V9l5-3v3l5-3v3l5-3v11z M4 20h16', label:'Factory'},
+    {x:310,y:300,ic:'M2 7h11v8H2z M13 10h5l3 3v2h-8z M5.5 18a1.6 1.6 0 1 0 0-.1 M17 18a1.6 1.6 0 1 0 0-.1', label:'Logistics'},
+    {x:430,y:150,ic:'M5 9l1.5-4h11L19 9 M5 9h14v10H5z M9 19v-5h6v5', label:'Retail'},
+    {x:540,y:270,ic:'M12 20s-6-3.5-6-9a6 6 0 0 1 12 0c0 5.5-6 9-6 9z M12 6c-2.5 1.7-2.5 5 0 7 2.5-1.7 2.5-5 0-7z', label:'Impact'},
   ];
-  let pathEl,L=0,parts=[],prevHot={};
+  let pathEl,L=0,prevHot={},flowOffset=0;
   function build(){
+    // defs for gradients and filters
+    const defs=document.createElementNS(NS,'defs');
+    defs.innerHTML=`
+      <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#70cbd6" stop-opacity="0"/>
+        <stop offset="40%" stop-color="#70cbd6" stop-opacity="0.8"/>
+        <stop offset="60%" stop-color="#a8e2e9" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#70cbd6" stop-opacity="0"/>
+      </linearGradient>
+      <filter id="nodeGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="softGlow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+    svg.appendChild(defs);
+
+    // build path
     let d=`M${nodes[0].x} ${nodes[0].y}`;
     for(let i=1;i<nodes.length;i++){const a=nodes[i-1],b=nodes[i],mx=(a.x+b.x)/2;d+=` C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`;}
+
+    // base path (subtle)
     pathEl=document.createElementNS(NS,'path');pathEl.setAttribute('d',d);pathEl.setAttribute('fill','none');
-    pathEl.setAttribute('stroke','rgba(112,203,214,.4)');pathEl.setAttribute('stroke-width','2');
+    pathEl.setAttribute('stroke','rgba(112,203,214,.25)');pathEl.setAttribute('stroke-width','2');
     pathEl.setAttribute('stroke-linecap','round');svg.appendChild(pathEl);
     L=pathEl.getTotalLength();pathEl.style.strokeDasharray=L;pathEl.style.strokeDashoffset=L;
+
+    // flow path (animated dashed line that streams along the path)
+    const flowPath=pathEl.cloneNode();flowPath.id='vizflow';
+    flowPath.setAttribute('stroke','rgba(112,203,214,.6)');
+    flowPath.setAttribute('stroke-width','2.5');
+    flowPath.setAttribute('stroke-dasharray','12 28');
+    flowPath.style.opacity='0';svg.appendChild(flowPath);
+
+    // glow path for transparency highlight
     const glow=pathEl.cloneNode();glow.id='vizglow';glow.setAttribute('stroke','rgba(120,225,240,.85)');
-    glow.setAttribute('stroke-width','3.5');glow.style.filter='drop-shadow(0 0 6px rgba(120,225,240,.7))';glow.style.opacity='0';svg.appendChild(glow);
-    nodes.forEach((n)=>{const g=document.createElementNS(NS,'g');g.setAttribute('class','node');g.setAttribute('transform',`translate(${n.x} ${n.y})`);
-      const ring=document.createElementNS(NS,'circle');ring.setAttribute('r','28');ring.setAttribute('fill','none');ring.setAttribute('stroke','#70cbd6');ring.setAttribute('stroke-width','2');ring.setAttribute('class','ring');g.appendChild(ring);
-      const c=document.createElementNS(NS,'circle');c.setAttribute('r','28');c.setAttribute('fill','rgba(0,129,143,.2)');c.setAttribute('stroke','rgba(112,203,214,.5)');c.setAttribute('stroke-width','1.5');g.appendChild(c);
+    glow.setAttribute('stroke-width','3');glow.style.filter='url(#softGlow)';glow.style.opacity='0';svg.appendChild(glow);
+
+    // connection segments between nodes (for individual segment highlighting)
+    for(let i=0;i<nodes.length-1;i++){
+      const a=nodes[i],b=nodes[i+1],mx=(a.x+b.x)/2;
+      const seg=document.createElementNS(NS,'path');
+      seg.setAttribute('d',`M${a.x} ${a.y} C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`);
+      seg.setAttribute('fill','none');seg.setAttribute('stroke','rgba(120,225,240,.7)');
+      seg.setAttribute('stroke-width','3');seg.setAttribute('stroke-linecap','round');
+      seg.style.filter='url(#softGlow)';seg.style.opacity='0';seg.id=`seg${i}`;
+      svg.appendChild(seg);
+    }
+
+    // nodes
+    nodes.forEach((n)=>{
+      const g=document.createElementNS(NS,'g');g.setAttribute('class','node');g.setAttribute('transform',`translate(${n.x} ${n.y})`);
+
+      // outer ring (pulse animation target)
+      const ring=document.createElementNS(NS,'circle');ring.setAttribute('r','30');ring.setAttribute('fill','none');
+      ring.setAttribute('stroke','#70cbd6');ring.setAttribute('stroke-width','1.5');ring.setAttribute('class','ring');ring.style.opacity='0';g.appendChild(ring);
+
+      // background circle
+      const bg=document.createElementNS(NS,'circle');bg.setAttribute('r','28');bg.setAttribute('fill','rgba(3,48,56,.6)');
+      bg.setAttribute('stroke','rgba(112,203,214,.35)');bg.setAttribute('stroke-width','1.5');g.appendChild(bg);
+
+      // inner fill circle
+      const c=document.createElementNS(NS,'circle');c.setAttribute('r','28');c.setAttribute('fill','rgba(0,129,143,.15)');
+      c.setAttribute('stroke','rgba(112,203,214,.5)');c.setAttribute('stroke-width','1.5');g.appendChild(c);
+
+      // icon
       const ic=document.createElementNS(NS,'path');ic.setAttribute('d',n.ic);ic.setAttribute('class','ic');ic.setAttribute('transform','translate(-12 -12)');g.appendChild(ic);
-      svg.appendChild(g);n.g=g;n.core=c;});
-    for(let i=0;i<5;i++){const p=document.createElementNS(NS,'circle');p.setAttribute('r','4');p.setAttribute('fill','#9be8f2');p.style.filter='drop-shadow(0 0 5px rgba(155,232,242,.8))';svg.appendChild(p);parts.push({el:p,off:i/5});}
+
+      svg.appendChild(g);n.g=g;n.core=c;n.bg=bg;
+    });
   }
   function frame(now){
     if(!pathEl)return;
     const active=now>=18.1&&now<32.0;svg.style.opacity=active?1:0;
-    const dp=Math.max(0,Math.min(1,(now-19.2)/3.0));pathEl.style.strokeDashoffset=(L*(1-dp)).toFixed(1);
-    nodes.forEach((n,i)=>{const on=now>=19.6+i*0.5;n.g.style.transition='opacity .6s var(--ease-io), transform .6s var(--ease-io)';n.g.style.opacity=on?1:0;n.core.style.transform=on?'scale(1)':'scale(.4)';});
-    const flowing=now>=22.0&&active;
-    parts.forEach(p=>{if(!flowing){p.el.style.opacity=0;return;}p.el.style.opacity=.85;const pos=((now*0.07)+p.off)%1,pt=pathEl.getPointAtLength(pos*L);p.el.setAttribute('cx',pt.x);p.el.setAttribute('cy',pt.y);});
-    // Capability 1 "Uncover risks" -> highlight node 1 (factory)
+    if(!active)return;
+
+    // draw path in
+    const dp=Math.max(0,Math.min(1,(now-19.2)/3.0));
+    pathEl.style.strokeDashoffset=(L*(1-dp)).toFixed(1);
+
+    // nodes appear
+    nodes.forEach((n,i)=>{const on=now>=19.6+i*0.5;
+      n.g.style.transition='opacity .6s var(--ease-io), transform .6s var(--ease-io)';
+      n.g.style.opacity=on?1:0;n.g.style.transform=on?'':'scale(0.5)';});
+
+    // animated flow (dashed line streaming along path) — starts at 22s
+    const flowEl=$('#vizflow');
+    if(flowEl){
+      const flowing=now>=22.0;
+      flowEl.style.transition='opacity .8s var(--ease-io)';
+      flowEl.style.opacity=flowing?'1':'0';
+      if(flowing){
+        flowOffset-=0.8;
+        flowEl.setAttribute('stroke-dashoffset',flowOffset.toFixed(0));
+      }
+    }
+
+    // Capability 1 "Uncover risks" -> highlight node 1 (factory) + segments 0,1
     hot(1,now>=24.4&&now<25.6);
-    // Capability 2 "Improve transparency" -> highlight nodes 2,3 (logistics, retail) + glow path
+    segHighlight(0,now>=24.4&&now<25.6);
+
+    // Capability 2 "Improve transparency" -> highlight nodes 2,3 + glow entire path
     hot(2,now>=25.8&&now<27.0);
     hot(3,now>=26.2&&now<27.0);
+    segHighlight(1,now>=25.8&&now<27.0);
+    segHighlight(2,now>=25.8&&now<27.0);
     glowPath(now>=25.8&&now<27.0,now,25.8);
-    // Capability 3 "Responsible sourcing" -> highlight node 0,4 (nature endpoints)
+
+    // Capability 3 "Responsible sourcing" -> highlight node 0,4 (endpoints)
     hot(0,now>=27.2&&now<28.6);
     hot(4,now>=27.5&&now<28.6);
+    segHighlight(3,now>=27.2&&now<28.6);
   }
   function hot(i,on){const n=nodes[i];if(!n.g)return;
     if(on&&!prevHot[i]){n.g.classList.remove('hot');void n.g.offsetWidth;n.g.classList.add('hot');}
     if(!on&&prevHot[i]){n.g.classList.remove('hot');}
     prevHot[i]=on;}
-  function glowPath(on,now,start){const g=$('#vizglow');if(!g)return;g.style.transition='opacity .5s var(--ease-io)';g.style.opacity=on?0.8:0;if(on){const dp=Math.min(1,(now-start)/1.0);g.style.strokeDasharray=L;g.style.strokeDashoffset=(L*(1-dp)).toFixed(1);}}
-  function reset(){prevHot={};nodes.forEach(n=>{if(n.g){n.g.classList.remove('hot');}});}
+  function segHighlight(i,on){const seg=$(`#seg${i}`);if(!seg)return;
+    seg.style.transition='opacity .5s var(--ease-io)';seg.style.opacity=on?'0.8':'0';}
+  function glowPath(on,now,start){const g=$('#vizglow');if(!g)return;
+    g.style.transition='opacity .5s var(--ease-io)';g.style.opacity=on?0.7:0;
+    if(on){const dp=Math.min(1,(now-start)/0.8);g.style.strokeDasharray=L;g.style.strokeDashoffset=(L*(1-dp)).toFixed(1);}}
+  function reset(){prevHot={};flowOffset=0;nodes.forEach(n=>{if(n.g){n.g.classList.remove('hot');}});}
   return {build,frame,reset};
 })();
 VIZ.build();
