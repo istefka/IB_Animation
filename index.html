@@ -60,8 +60,8 @@ body:not(.show-slots) .video-slot .ph::after{display:none;}
 .scene{position:absolute;inset:0;z-index:3;display:flex;align-items:center;padding:0 132px;
   opacity:0;visibility:hidden;pointer-events:none;}
 .scene.is-pre{opacity:0;visibility:hidden;}
-.scene.is-in{opacity:1;visibility:visible;transition:opacity .5s var(--e);}
-.scene.is-out{opacity:0;visibility:visible;transform:translateY(-22px) scale(.992);transition:opacity .55s var(--e),transform .55s var(--e);}
+.scene.is-in{opacity:1;visibility:visible;transition:opacity .65s var(--e);}
+.scene.is-out{opacity:0;visibility:visible;transform:translateY(-16px) scale(.995);filter:blur(2px);transition:opacity .6s var(--e),transform .6s var(--e),filter .6s var(--e);}
 
 /* shared brand type */
 h1 em,h2 em,.h1 em{font-style:normal;color:var(--teal-l);}
@@ -179,14 +179,28 @@ body:not(.show-slots) .hex.media .ph::after{display:none;}
 .captions .cap.show{opacity:1;transform:none;}
 body.no-captions .captions{display:none;}
 
-/* WIPE */
+/* WIPE — smooth horizontal curtain with soft gradient edges + teal leading glow */
 .wipe{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden;}
-.wipe .panel{position:absolute;inset:-2px;background:linear-gradient(120deg,var(--teal-l),var(--teal) 55%,var(--ink));
-  clip-path:polygon(-40% 0,-25% 0,-10% 100%,-55% 100%);}
-.wipe.sweep .panel{animation:sweep .9s var(--eio) forwards;}
-@keyframes sweep{0%{clip-path:polygon(-40% 0,-25% 0,-10% 100%,-55% 100%);}
-  46%{clip-path:polygon(62% 0,104% 0,118% 100%,76% 100%);}47%{clip-path:polygon(62% 0,142% 0,156% 100%,76% 100%);}
-  100%{clip-path:polygon(138% 0,178% 0,192% 100%,152% 100%);}}
+.wipe .panel{position:absolute;inset:-2px 0;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(5,148,163,.07) 10%,
+    rgba(0,58,72,.93) 23%,
+    #002028 37%,
+    #002028 63%,
+    rgba(0,58,72,.93) 77%,
+    rgba(5,148,163,.07) 90%,
+    transparent 100%);
+  transform:translateX(-105%);}
+.wipe .panel::after{content:'';position:absolute;top:0;bottom:0;right:-1px;width:2px;
+  background:linear-gradient(180deg,transparent 0%,rgba(112,203,214,.9) 20%,#06a9ba 50%,rgba(112,203,214,.9) 80%,transparent 100%);
+  box-shadow:0 0 22px 9px rgba(6,169,186,.65);}
+.wipe.sweep .panel{animation:slide-wipe 1.15s cubic-bezier(.76,0,.24,1) forwards;}
+@keyframes slide-wipe{
+  0%  {transform:translateX(-105%);}
+  42% {transform:translateX(0%);}
+  58% {transform:translateX(0%);}
+  100%{transform:translateX(105%);}}
 
 /* UI */
 #ui{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:14px;padding:12px 18px;
@@ -250,7 +264,7 @@ body.clean #ui,body.clean .hint{display:none;}
     <div class="bridge-text">
       <div class="r" data-in="15.7"><span class="logo" data-logo data-size="40"></span></div>
       <div class="bridge-tag">
-        <span class="line" data-in="16.0"><span class="iw">a <em>Decision</em></span></span><br/>
+        <span class="line" data-in="16.0"><span class="iw"><em>Decision</em></span></span><br/>
         <span class="line" data-in="16.2"><span class="iw"><em>Intelligence</em> Platform</span></span>
       </div>
       <div class="rule r d2" data-in="16.5"></div>
@@ -326,7 +340,7 @@ body.clean #ui,body.clean .hint{display:none;}
 
     <div class="endcard">
       <div class="r sc" data-in="37.3"><span class="logo" data-logo data-size="104"></span></div>
-      <div class="desc r" data-in="38.0">a <em>Decision Intelligence</em> Platform</div>
+      <div class="desc r" data-in="38.0"><em>Decision Intelligence</em> Platform</div>
       <div class="url r" data-in="38.7">impactbuying.com</div>
     </div>
   </section>
