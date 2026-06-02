@@ -109,8 +109,8 @@ em{font-style:normal;color:var(--teal-l);}
 /* ============ SCENE 3 — SOLUTION ============ */
 #s3{padding:0 130px;justify-content:space-between;}
 .s3-left{width:680px;position:relative;height:540px;}
-.s3-right{width:540px;height:480px;position:relative;transition:transform 1.0s var(--ease-io);}
-.s3-right.viz-center{transform:translateX(-180px) scale(1.25);}
+.s3-right{width:540px;height:480px;position:relative;transition:transform 1.2s var(--ease-io);}
+.s3-right.viz-center{transform:translateX(-260px) scale(1.55);}
 .s3-lead{position:absolute;left:0;top:40px;width:680px;opacity:1;transform:translateY(0);
   transition:opacity 0.7s var(--ease-io),transform 0.7s var(--ease-io);}
 .s3-lead.phase-out{opacity:0;transform:translateY(-10px);pointer-events:none;}
@@ -347,7 +347,7 @@ const TIMINGS={duration:40.94,lines:[
   {t0:29.98,t1:34.88,cap:"We uncover risks, improve transparency,\nand support responsible sourcing."},
   {t0:35.46,t1:40.94,cap:"Together, we create supply chains better \u2014\nbetter for business, people and the planet."},
 ]};
-const END=46.0;
+const END=49.0;
 const CROSSFADES=[2.55,15.0,20.2,35.0];
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -367,30 +367,72 @@ $$('[data-logo]').forEach(buildLogo);
    ============================================================ */
 const VIZ=(()=>{
   const NS='http://www.w3.org/2000/svg',svg=$('#vizsvg');
-  const nodes=[
-    {x:60,y:270, ic:'M12 3 C8 7 8 12 12 16 C16 12 16 7 12 3 Z M12 16 v5'},
-    {x:190,y:150,ic:'M4 20V9l5-3v3l5-3v3l5-3v11z M4 20h16'},
-    {x:310,y:300,ic:'M2 7h11v8H2z M13 10h5l3 3v2h-8z M5.5 18a1.6 1.6 0 1 0 0-.1 M17 18a1.6 1.6 0 1 0 0-.1'},
-    {x:430,y:150,ic:'M5 9l1.5-4h11L19 9 M5 9h14v10H5z M9 19v-5h6v5'},
-    {x:540,y:270,ic:'M12 20s-6-3.5-6-9a6 6 0 0 1 12 0c0 5.5-6 9-6 9z M12 6c-2.5 1.7-2.5 5 0 7 2.5-1.7 2.5-5 0-7z'},
+  const chainPos=[
+    {x:60,y:270},{x:190,y:150},{x:310,y:300},{x:430,y:150},{x:540,y:270}
   ];
-  let pathEl,L=0,prevHot={};
+  const icons=[
+    'M12 3 C8 7 8 12 12 16 C16 12 16 7 12 3 Z M12 16 v5',
+    'M4 20V9l5-3v3l5-3v3l5-3v11z M4 20h16',
+    'M2 7h11v8H2z M13 10h5l3 3v2h-8z M5.5 18a1.6 1.6 0 1 0 0-.1 M17 18a1.6 1.6 0 1 0 0-.1',
+    'M5 9l1.5-4h11L19 9 M5 9h14v10H5z M9 19v-5h6v5',
+    'M12 20s-6-3.5-6-9a6 6 0 0 1 12 0c0 5.5-6 9-6 9z M12 6c-2.5 1.7-2.5 5 0 7 2.5-1.7 2.5-5 0-7z'
+  ];
+  // Circle arrangement centered at (300,240) r=120
+  const cx=300,cy=240,cr=120;
+  const circlePos=chainPos.map((_,i)=>{
+    const a=-Math.PI/2+i*(2*Math.PI/5);
+    return {x:cx+cr*Math.cos(a),y:cy+cr*Math.sin(a)};
+  });
+  const nodes=chainPos.map((p,i)=>({...p,ic:icons[i]}));
+  let pathEl,circlePathEl,L=0,prevHot={},pulseEls=[];
+
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function getNodePos(i,morphT){
+    return {x:lerp(circlePos[i].x,chainPos[i].x,morphT),y:lerp(circlePos[i].y,chainPos[i].y,morphT)};
+  }
+  function buildChainD(morphT){
+    const pts=nodes.map((_,i)=>getNodePos(i,morphT));
+    let d=`M${pts[0].x} ${pts[0].y}`;
+    for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],mx=(a.x+b.x)/2;d+=` C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`;}
+    return d;
+  }
+  function buildCircleD(){
+    let d='';
+    for(let i=0;i<5;i++){
+      const a=circlePos[i],b=circlePos[(i+1)%5];
+      const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+      d+=(i===0?`M${a.x} ${a.y}`:'');
+      d+=` Q ${mx+(cy-my)*0.3} ${my+(mx-cx)*0.3}, ${b.x} ${b.y}`;
+    }
+    return d+'Z';
+  }
+
   function build(){
     const defs=document.createElementNS(NS,'defs');
     defs.innerHTML=`<filter id="softGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
     svg.appendChild(defs);
 
-    let d=`M${nodes[0].x} ${nodes[0].y}`;
-    for(let i=1;i<nodes.length;i++){const a=nodes[i-1],b=nodes[i],mx=(a.x+b.x)/2;d+=` C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`;}
+    // Circle path (visible during cycle phase)
+    circlePathEl=document.createElementNS(NS,'path');
+    circlePathEl.setAttribute('d',buildCircleD());
+    circlePathEl.setAttribute('fill','none');
+    circlePathEl.setAttribute('stroke','rgba(112,203,214,.4)');
+    circlePathEl.setAttribute('stroke-width','2');
+    circlePathEl.setAttribute('stroke-linecap','round');
+    circlePathEl.style.transition='opacity .6s var(--ease-io)';
+    circlePathEl.style.opacity='0';
+    svg.appendChild(circlePathEl);
 
+    // Chain path
+    let d=buildChainD(1);
     pathEl=document.createElementNS(NS,'path');pathEl.setAttribute('d',d);pathEl.setAttribute('fill','none');
     pathEl.setAttribute('stroke','rgba(112,203,214,.3)');pathEl.setAttribute('stroke-width','2');
     pathEl.setAttribute('stroke-linecap','round');svg.appendChild(pathEl);
     L=pathEl.getTotalLength();pathEl.style.strokeDasharray=L;pathEl.style.strokeDashoffset=L;
 
-    // segment paths for highlighting
+    // Segment paths for highlighting
     for(let i=0;i<nodes.length-1;i++){
-      const a=nodes[i],b=nodes[i+1],mx=(a.x+b.x)/2;
+      const a=chainPos[i],b=chainPos[i+1],mx=(a.x+b.x)/2;
       const seg=document.createElementNS(NS,'path');
       seg.setAttribute('d',`M${a.x} ${a.y} C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`);
       seg.setAttribute('fill','none');seg.setAttribute('stroke','rgba(112,203,214,.7)');
@@ -399,43 +441,83 @@ const VIZ=(()=>{
       seg.id=`seg${i}`;svg.appendChild(seg);
     }
 
-    nodes.forEach((n)=>{
+    // Pulse dots (travel around circle during cycle phase)
+    for(let i=0;i<3;i++){
+      const dot=document.createElementNS(NS,'circle');
+      dot.setAttribute('r','4');dot.setAttribute('fill','rgba(112,203,214,.8)');
+      dot.style.filter='url(#softGlow)';dot.style.opacity='0';
+      svg.appendChild(dot);pulseEls.push(dot);
+    }
+
+    // Nodes
+    nodes.forEach((n,i)=>{
       const g=document.createElementNS(NS,'g');g.setAttribute('class','node');
       g.setAttribute('transform',`translate(${n.x} ${n.y})`);
-
       const c=document.createElementNS(NS,'circle');c.setAttribute('r','28');c.setAttribute('fill','rgba(3,48,56,.5)');
       c.setAttribute('stroke','rgba(112,203,214,.4)');c.setAttribute('stroke-width','1.5');c.setAttribute('class','core');g.appendChild(c);
-
       const ic=document.createElementNS(NS,'path');ic.setAttribute('d',n.ic);ic.setAttribute('class','ic');
       ic.setAttribute('transform','translate(-12 -12)');g.appendChild(ic);
-
       svg.appendChild(g);n.g=g;
     });
   }
+
   function frame(now){
     if(!pathEl)return;
     const active=now>=20.3&&now<35.0;svg.style.opacity=active?1:0;
-    if(!active)return;
+    if(!active){pulseEls.forEach(p=>p.style.opacity='0');circlePathEl.style.opacity='0';return;}
 
-    // draw path in
-    const dp=Math.max(0,Math.min(1,(now-21.2)/3.0));
-    pathEl.style.strokeDashoffset=(L*(1-dp)).toFixed(1);
+    // Morph phase: 26.4-29.8 = cycle mode, morphing to chain at end
+    const inCycle=now>=20.3&&now<29.8;
+    const morphStart=27.8,morphEnd=29.8;
+    let morphT=1; // 1 = chain positions
+    if(now<morphStart)morphT=0;
+    else if(now<morphEnd)morphT=(now-morphStart)/(morphEnd-morphStart);
+    // ease
+    morphT=morphT<0.5?2*morphT*morphT:1-Math.pow(-2*morphT+2,2)/2;
 
-    // nodes appear with stagger
-    nodes.forEach((n,i)=>{const on=now>=21.6+i*0.5;
+    // Update node positions
+    nodes.forEach((n,i)=>{
+      const pos=getNodePos(i,morphT);
+      if(n.g)n.g.setAttribute('transform',`translate(${pos.x.toFixed(1)} ${pos.y.toFixed(1)})`);
+    });
+
+    // Circle path visibility
+    circlePathEl.style.opacity=inCycle&&morphT<0.5?'1':'0';
+
+    // Chain path
+    if(morphT>0){
+      pathEl.setAttribute('d',buildChainD(morphT));
+      const dp=Math.max(0,Math.min(1,(now-21.2)/3.0));
+      pathEl.style.strokeDashoffset=(L*(1-dp)).toFixed(1);
+      pathEl.style.opacity=morphT>0.3?'1':'0.3';
+    }else{
+      pathEl.style.opacity='0';
+    }
+
+    // Pulse dots travel around circle
+    if(inCycle&&morphT<0.7){
+      const elapsed=now-20.3;
+      pulseEls.forEach((dot,i)=>{
+        const angle=-Math.PI/2+((elapsed*0.8)+i*(2*Math.PI/3))%(2*Math.PI);
+        const px=cx+cr*Math.cos(angle),py=cy+cr*Math.sin(angle);
+        dot.setAttribute('cx',px.toFixed(1));dot.setAttribute('cy',py.toFixed(1));
+        dot.style.opacity='0.8';
+      });
+    }else{
+      pulseEls.forEach(p=>p.style.opacity='0');
+    }
+
+    // Nodes appear with stagger
+    nodes.forEach((n,i)=>{const on=now>=21.0+i*0.4;
       n.g.style.opacity=on?1:0;});
 
-    // Capability 1 — highlight factory node + adjacent segments
+    // Capability highlights (only after morph complete)
     hot(1,now>=30.2&&now<31.6);
     seg(0,now>=30.2&&now<31.6);
-
-    // Capability 2 — highlight logistics + retail (transparency across chain)
     hot(2,now>=31.8&&now<33.1);
     hot(3,now>=32.0&&now<33.1);
     seg(1,now>=31.8&&now<33.1);
     seg(2,now>=31.8&&now<33.1);
-
-    // Capability 3 — highlight endpoints (origin + impact)
     hot(0,now>=33.3&&now<34.8);
     hot(4,now>=33.5&&now<34.8);
     seg(3,now>=33.3&&now<34.8);
@@ -445,7 +527,7 @@ const VIZ=(()=>{
     if(!on&&prevHot[i])n.g.classList.remove('hot');
     prevHot[i]=on;}
   function seg(i,on){const el=$(`#seg${i}`);if(el)el.style.opacity=on?'0.7':'0';}
-  function reset(){prevHot={};nodes.forEach(n=>{if(n.g)n.g.classList.remove('hot');});}
+  function reset(){prevHot={};nodes.forEach(n=>{if(n.g){n.g.classList.remove('hot');n.g.setAttribute('transform',`translate(${circlePos[nodes.indexOf(n)].x} ${circlePos[nodes.indexOf(n)].y}`);}});}
   return {build,frame,reset};
 })();
 VIZ.build();
@@ -490,6 +572,9 @@ function loop(ts){
     if(!vo.error&&!isNaN(vo.duration)&&clock<=vo.duration){
       if(Math.abs(vo.currentTime-clock)>0.25){try{vo.currentTime=clock;}catch(e){}}
     }
+    // Fade out background music in the last 3 seconds
+    if(clock>=46.0){const fade=Math.max(0,1-(clock-46.0)/3.0);bgm.volume=0.15*fade;}
+    else{bgm.volume=0.15;}
     if(clock>=END){restart();}
   }
   setStateAt(Math.min(clock,END));
