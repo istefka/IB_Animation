@@ -4,16 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ImpactBuying — Brand Animation v2 (Slide Deck)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=block" rel="stylesheet">
 <style>
 /* ============================================================
    ImpactBuying — v2 · slide-deck aesthetic
    Clean, centered, smooth crossfades, premium typography
    ============================================================ */
-@font-face{font-family:'Poppins';font-weight:400;font-display:block;src:url('/assets/Poppins-Regular-C1IsaolU.ttf') format('truetype');}
-@font-face{font-family:'Poppins';font-weight:500;font-display:block;src:url('/assets/Poppins-Medium-BblA7dQf.ttf') format('truetype');}
-@font-face{font-family:'Poppins';font-weight:600;font-display:block;src:url('/assets/Poppins-SemiBold-Gz22PxOe.ttf') format('truetype');}
-@font-face{font-family:'Poppins';font-weight:700;font-display:block;src:url('/assets/Poppins-Bold-CNzhNbUJ.ttf') format('truetype');}
-@font-face{font-family:'Poppins';font-weight:800;font-display:block;src:url('/assets/Poppins-ExtraBold-DyUBcaqp.ttf') format('truetype');}
 
 :root{
   --ink:#052433;--teal:#00818f;--teal-l:#70cbd6;--mint:#e6f4f5;
@@ -153,10 +151,11 @@ em{font-style:normal;color:var(--teal-l);}
 .pillar .pic{width:72px;height:72px;border-radius:16px;display:grid;place-items:center;background:var(--mint);box-shadow:0 16px 48px rgba(0,8,12,.4);}
 .pillar .pic svg{width:36px;height:36px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .pillar .pw{font-weight:700;font-size:36px;letter-spacing:-.02em;color:var(--teal-l);}
-.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.endcard .desc{margin-top:24px;font-size:22px;font-weight:500;color:#fff;letter-spacing:.01em;}
-.endcard .desc em{font-style:normal;color:var(--teal-l);}
-.endcard .url{margin-top:32px;font-size:17px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal-l);font-weight:600;}
+.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;}
+.endcard .desc{margin-top:44px;font-size:44px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1;}
+.endcard .desc em{font-style:normal;color:var(--teal-l);font-weight:800;}
+.endcard .url{margin-top:48px;font-size:18px;letter-spacing:.35em;text-transform:uppercase;color:var(--teal-l);font-weight:600;
+  padding:16px 40px;border:1.5px solid rgba(112,203,214,.3);border-radius:40px;background:rgba(5,148,163,.06);}
 
 /* envelope band */
 .envelope{position:absolute;left:0;right:0;bottom:0;height:220px;z-index:4;pointer-events:none;
@@ -303,7 +302,7 @@ body.clean #ui,body.clean .hint{display:none;}
       </div>
     </div>
     <div class="endcard">
-      <div class="r sc" data-in="38.0"><span class="logo" data-logo data-size="100"></span></div>
+      <div class="r sc" data-in="38.0"><span class="logo" data-logo data-size="130"></span></div>
       <div class="desc r d1" data-in="38.5"><em>Decision Intelligence</em> Provider</div>
       <div class="url r d2" data-in="39.0">impactbuying.com</div>
     </div>
