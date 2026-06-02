@@ -377,34 +377,25 @@ const VIZ=(()=>{
     'M5 9l1.5-4h11L19 9 M5 9h14v10H5z M9 19v-5h6v5',
     'M12 20s-6-3.5-6-9a6 6 0 0 1 12 0c0 5.5-6 9-6 9z M12 6c-2.5 1.7-2.5 5 0 7 2.5-1.7 2.5-5 0-7z'
   ];
-  // Circle arrangement centered at (300,240) r=120
   const cx=300,cy=240,cr=120;
   const circlePos=chainPos.map((_,i)=>{
     const a=-Math.PI/2+i*(2*Math.PI/5);
     return {x:cx+cr*Math.cos(a),y:cy+cr*Math.sin(a)};
   });
   const nodes=chainPos.map((p,i)=>({...p,ic:icons[i]}));
-  let pathEl,circlePathEl,L=0,prevHot={},pulseEls=[];
+  let pathEl,circleEl,L=0,prevHot={},pulseEls=[];
 
   function lerp(a,b,t){return a+(b-a)*t;}
-  function getNodePos(i,morphT){
-    return {x:lerp(circlePos[i].x,chainPos[i].x,morphT),y:lerp(circlePos[i].y,chainPos[i].y,morphT)};
+  function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+  function getNodePos(i,t){
+    return {x:lerp(circlePos[i].x,chainPos[i].x,t),y:lerp(circlePos[i].y,chainPos[i].y,t)};
   }
-  function buildChainD(morphT){
-    const pts=nodes.map((_,i)=>getNodePos(i,morphT));
-    let d=`M${pts[0].x} ${pts[0].y}`;
-    for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],mx=(a.x+b.x)/2;d+=` C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`;}
+  function buildChainD(t){
+    const pts=nodes.map((_,i)=>getNodePos(i,t));
+    let d=`M${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+    for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],mx=(a.x+b.x)/2;
+      d+=` C ${mx.toFixed(1)} ${a.y.toFixed(1)}, ${mx.toFixed(1)} ${b.y.toFixed(1)}, ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;}
     return d;
-  }
-  function buildCircleD(){
-    let d='';
-    for(let i=0;i<5;i++){
-      const a=circlePos[i],b=circlePos[(i+1)%5];
-      const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
-      d+=(i===0?`M${a.x} ${a.y}`:'');
-      d+=` Q ${mx+(cy-my)*0.3} ${my+(mx-cx)*0.3}, ${b.x} ${b.y}`;
-    }
-    return d+'Z';
   }
 
   function build(){
@@ -412,16 +403,13 @@ const VIZ=(()=>{
     defs.innerHTML=`<filter id="softGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
     svg.appendChild(defs);
 
-    // Circle path (visible during cycle phase)
-    circlePathEl=document.createElementNS(NS,'path');
-    circlePathEl.setAttribute('d',buildCircleD());
-    circlePathEl.setAttribute('fill','none');
-    circlePathEl.setAttribute('stroke','rgba(112,203,214,.4)');
-    circlePathEl.setAttribute('stroke-width','2');
-    circlePathEl.setAttribute('stroke-linecap','round');
-    circlePathEl.style.transition='opacity .6s var(--ease-io)';
-    circlePathEl.style.opacity='0';
-    svg.appendChild(circlePathEl);
+    // Proper circle element (visible during cycle phase)
+    circleEl=document.createElementNS(NS,'circle');
+    circleEl.setAttribute('cx',cx);circleEl.setAttribute('cy',cy);circleEl.setAttribute('r',cr);
+    circleEl.setAttribute('fill','none');circleEl.setAttribute('stroke','rgba(112,203,214,.4)');
+    circleEl.setAttribute('stroke-width','2');circleEl.setAttribute('stroke-linecap','round');
+    circleEl.style.opacity='0';circleEl.style.transition='opacity .8s var(--ease-io)';
+    svg.appendChild(circleEl);
 
     // Chain path
     let d=buildChainD(1);
@@ -441,7 +429,7 @@ const VIZ=(()=>{
       seg.id=`seg${i}`;svg.appendChild(seg);
     }
 
-    // Pulse dots (travel around circle during cycle phase)
+    // Pulse dots (travel around the circle during cycle phase)
     for(let i=0;i<3;i++){
       const dot=document.createElementNS(NS,'circle');
       dot.setAttribute('r','4');dot.setAttribute('fill','rgba(112,203,214,.8)');
@@ -452,7 +440,7 @@ const VIZ=(()=>{
     // Nodes
     nodes.forEach((n,i)=>{
       const g=document.createElementNS(NS,'g');g.setAttribute('class','node');
-      g.setAttribute('transform',`translate(${n.x} ${n.y})`);
+      g.setAttribute('transform',`translate(${circlePos[i].x.toFixed(1)} ${circlePos[i].y.toFixed(1)})`);
       const c=document.createElementNS(NS,'circle');c.setAttribute('r','28');c.setAttribute('fill','rgba(3,48,56,.5)');
       c.setAttribute('stroke','rgba(112,203,214,.4)');c.setAttribute('stroke-width','1.5');c.setAttribute('class','core');g.appendChild(c);
       const ic=document.createElementNS(NS,'path');ic.setAttribute('d',n.ic);ic.setAttribute('class','ic');
@@ -464,44 +452,45 @@ const VIZ=(()=>{
   function frame(now){
     if(!pathEl)return;
     const active=now>=20.3&&now<35.0;svg.style.opacity=active?1:0;
-    if(!active){pulseEls.forEach(p=>p.style.opacity='0');circlePathEl.style.opacity='0';return;}
+    if(!active){pulseEls.forEach(p=>p.style.opacity='0');circleEl.style.opacity='0';return;}
 
-    // Morph phase: 26.4-29.8 = cycle mode, morphing to chain at end
-    const inCycle=now>=20.3&&now<29.8;
-    const morphStart=27.8,morphEnd=29.8;
-    let morphT=1; // 1 = chain positions
-    if(now<morphStart)morphT=0;
-    else if(now<morphEnd)morphT=(now-morphStart)/(morphEnd-morphStart);
-    // ease
-    morphT=morphT<0.5?2*morphT*morphT:1-Math.pow(-2*morphT+2,2)/2;
+    // morphT: 0 = circle, 1 = chain
+    const morphStart=28.0,morphEnd=29.8;
+    let rawT=1;
+    if(now<morphStart)rawT=0;
+    else if(now<morphEnd)rawT=(now-morphStart)/(morphEnd-morphStart);
+    const morphT=easeInOutCubic(Math.max(0,Math.min(1,rawT)));
 
-    // Update node positions
+    // Update node positions smoothly
     nodes.forEach((n,i)=>{
       const pos=getNodePos(i,morphT);
       if(n.g)n.g.setAttribute('transform',`translate(${pos.x.toFixed(1)} ${pos.y.toFixed(1)})`);
     });
 
-    // Circle path visibility
-    circlePathEl.style.opacity=inCycle&&morphT<0.5?'1':'0';
+    // Circle visibility — fade out as morph progresses
+    circleEl.style.opacity=morphT<0.3?'1':morphT<0.6?String(1-(morphT-0.3)/0.3):'0';
 
-    // Chain path
-    if(morphT>0){
+    // Chain path — fade in as morph progresses
+    if(morphT>0.3){
       pathEl.setAttribute('d',buildChainD(morphT));
+      pathEl.style.strokeDashoffset='0';
+      pathEl.style.opacity=String(Math.min(1,(morphT-0.3)/0.4));
+    }else if(morphT===1){
       const dp=Math.max(0,Math.min(1,(now-21.2)/3.0));
       pathEl.style.strokeDashoffset=(L*(1-dp)).toFixed(1);
-      pathEl.style.opacity=morphT>0.3?'1':'0.3';
+      pathEl.style.opacity='1';
     }else{
       pathEl.style.opacity='0';
     }
 
-    // Pulse dots travel around circle
-    if(inCycle&&morphT<0.7){
+    // Pulse dots orbit the circle
+    if(morphT<0.5){
       const elapsed=now-20.3;
       pulseEls.forEach((dot,i)=>{
-        const angle=-Math.PI/2+((elapsed*0.8)+i*(2*Math.PI/3))%(2*Math.PI);
+        const angle=-Math.PI/2+((elapsed*0.7)+i*(2*Math.PI/3))%(2*Math.PI);
         const px=cx+cr*Math.cos(angle),py=cy+cr*Math.sin(angle);
         dot.setAttribute('cx',px.toFixed(1));dot.setAttribute('cy',py.toFixed(1));
-        dot.style.opacity='0.8';
+        dot.style.opacity=String(0.8*(1-morphT*2));
       });
     }else{
       pulseEls.forEach(p=>p.style.opacity='0');
@@ -527,7 +516,7 @@ const VIZ=(()=>{
     if(!on&&prevHot[i])n.g.classList.remove('hot');
     prevHot[i]=on;}
   function seg(i,on){const el=$(`#seg${i}`);if(el)el.style.opacity=on?'0.7':'0';}
-  function reset(){prevHot={};nodes.forEach(n=>{if(n.g){n.g.classList.remove('hot');n.g.setAttribute('transform',`translate(${circlePos[nodes.indexOf(n)].x} ${circlePos[nodes.indexOf(n)].y}`);}});}
+  function reset(){prevHot={};nodes.forEach((n,i)=>{if(n.g){n.g.classList.remove('hot');n.g.setAttribute('transform',`translate(${circlePos[i].x.toFixed(1)} ${circlePos[i].y.toFixed(1)})`);circleEl.style.opacity='0';pathEl.style.opacity='0';}});}
   return {build,frame,reset};
 })();
 VIZ.build();
