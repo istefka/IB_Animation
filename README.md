@@ -99,13 +99,12 @@ python3 scripts/build_audio.py       # writes assets/vo_placeholder.mp3 + timing
 
 ## Logo
 
-The **ImpΛctBuying** lockup *with* the "Proven Positive Impact" payoff is drawn
-as vector (white) in `index.html` via `buildLogo()` — the official
-`Logo-met-payoff.svg` couldn't be downloaded here (the host is outside this
-sandbox's network allowlist). If you'd like the exact source SVG embedded,
-drop the file in `assets/logo.svg` and point `buildLogo()` at it (or paste its
-`<path>` data over the recreated triangle). It currently appears in Scene 3
-(small) and the Scene 4 end card (large).
+Uses the **official ImpactBuying logo** (`assets/logo.svg`, the white
+"with-payoff" lockup) directly — loaded via `buildLogo()` and sized per
+placement. It appears in Scene 3 (small, 44px tall) and the Scene 4 end card
+(large, 104px tall). To resize, change the `data-size` attribute (height in px)
+on the `[data-logo]` spans in `index.html`; to update the artwork, replace
+`assets/logo.svg`.
 
 ## Brand tokens (from the PPWR white paper)
 

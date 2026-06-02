@@ -140,12 +140,9 @@ body:not(.show-slots) .video-slot .ph::after{display:none;}
 .envelope.shown{transform:translateY(0);transition:transform 1s var(--e);}
 .envelope svg{width:100%;height:100%;display:block;}
 
-/* LOGO */
-.logo{display:inline-flex;flex-direction:column;align-items:center;gap:.34em;}
-.wm{display:inline-flex;align-items:flex-end;font-weight:700;letter-spacing:-.012em;line-height:.9;color:#fff;white-space:nowrap;}
-.wm .tri{display:inline-block;}.wm .tri svg{display:block;height:.72em;width:auto;}
-.wm .reg{font-size:.3em;font-weight:600;align-self:flex-start;margin-left:.04em;color:var(--teal-300);}
-.payoff{font-size:.235em;letter-spacing:.4em;font-weight:600;color:#fff;text-transform:uppercase;padding-left:.4em;opacity:.92;}
+/* LOGO (official ImpactBuying artwork, assets/logo.svg) */
+.logo{display:inline-flex;}
+.logo-img{display:block;width:auto;}
 
 /* CAPTIONS */
 .captions{position:absolute;left:0;right:0;bottom:48px;z-index:5;display:flex;justify-content:center;padding:0 130px;pointer-events:none;}
@@ -221,7 +218,7 @@ body.clean #ui,body.clean .hint{display:none;}
     <div class="video-slot"><div class="ph" data-label="▶ Video slot · S3 · ports / logistics / data b-roll"></div></div>
 
     <div class="s3-left">
-      <div class="s3-logo r" data-in="18.25"><span class="logo" data-logo data-size="34"></span></div>
+      <div class="s3-logo r" data-in="18.25"><span class="logo" data-logo data-size="44"></span></div>
 
       <div class="s3-lead">
         <h2>
@@ -276,7 +273,7 @@ body.clean #ui,body.clean .hint{display:none;}
     </div>
 
     <div class="endcard">
-      <div class="r sc" data-in="37.3"><span class="logo" data-logo data-size="70"></span></div>
+      <div class="r sc" data-in="37.3"><span class="logo" data-logo data-size="104"></span></div>
       <div class="url r" data-in="38.2">impactbuying.com</div>
     </div>
   </section>
@@ -326,8 +323,8 @@ const stage=$('#stage'),vo=$('#vo'),capEl=$('#cap'),wipeEl=$('#wipe'),envelope=$
 const scenes=$$('.scene'), reveals=$$('[data-in]').filter(e=>!e.classList.contains('scene'));
 
 /* ---- ImpΛctBuying lockup (triangle = A), white, + payoff ---- */
-function buildLogo(el){const size=+(el.dataset.size||40);el.classList.add('logo');
-  el.innerHTML=`<span class="wm" style="font-size:${size}px">Imp<span class="tri"><svg viewBox="0 0 52 60"><path d="M26 3 L51 57 L36.5 57 L26 33 L15.5 57 L1 57 Z" fill="#fff"/></svg></span>ctBuying<span class="reg">®</span></span><span class="payoff">Proven Positive Impact</span>`;}
+function buildLogo(el){const h=+(el.dataset.size||60);el.classList.add('logo');
+  el.innerHTML=`<img class="logo-img" src="assets/logo.svg" alt="ImpactBuying — Proven Positive Impact" style="height:${h}px">`;}
 $$('[data-logo]').forEach(buildLogo);
 
 /* ============================================================
