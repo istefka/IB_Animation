@@ -156,11 +156,13 @@ em{font-style:normal;color:var(--teal-l);}
 .endcard .logo-wrap{display:flex;align-items:center;gap:0;}
 .endcard .desc{margin-top:48px;font-size:62px;font-weight:700;color:#fff;letter-spacing:-.025em;line-height:1.1;}
 .endcard .desc em{font-style:normal;color:var(--teal-l);font-weight:800;}
-.endcard .url{margin-top:32px;font-size:17px;letter-spacing:.01em;color:var(--teal-l);font-weight:500;opacity:.85;}
-.endcard .ticker-wrap{position:absolute;bottom:60px;left:0;right:0;overflow:hidden;}
-.endcard .ticker-label{text-align:center;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:500;margin-bottom:20px;}
-.endcard .ticker{display:flex;gap:60px;animation:tickerScroll 20s linear infinite;align-items:center;white-space:nowrap;}
-.endcard .ticker img{height:32px;opacity:.5;filter:brightness(0) invert(1);transition:opacity .3s;}
+.endcard .url{margin-top:32px;font-size:17px;letter-spacing:.01em;color:var(--teal-l);font-weight:500;}
+.endcard .url.shown{opacity:.85;}
+.endcard .ticker-wrap{position:absolute;bottom:50px;left:0;right:0;overflow:hidden;}
+.endcard .ticker-label{text-align:center;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:500;margin-bottom:16px;}
+.endcard .ticker-track{display:flex;animation:tickerScroll 30s linear infinite;align-items:center;white-space:nowrap;width:max-content;}
+.endcard .ticker-item{flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:10px;padding:10px 20px;margin:0 12px;height:48px;min-width:100px;}
+.endcard .ticker-item img{height:28px;max-width:100px;object-fit:contain;}
 @keyframes tickerScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* envelope band */
@@ -313,7 +315,29 @@ body.clean #ui,body.clean .hint{display:none;}
       <div class="url r d2" data-in="43.0">www.impactbuying.com</div>
       <div class="ticker-wrap r" data-in="43.5">
         <div class="ticker-label">Trusted by leading brands worldwide</div>
-        <div class="ticker" id="logoTicker">
+        <div class="ticker-track" id="logoTicker">
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Action_Nederland_Logo_2020.svg/800px-Action_Nederland_Logo_2020.svg.png" alt="Action"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Ahold_Delhaize_logo.svg/800px-Ahold_Delhaize_logo.svg.png" alt="Ahold Delhaize"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Logo_Albert_Heijn.svg/800px-Logo_Albert_Heijn.svg.png" alt="Albert Heijn"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Axfood_logo.svg/800px-Axfood_logo.svg.png" alt="Axfood"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Bidfood_logo.svg/800px-Bidfood_logo.svg.png" alt="Bidfood"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/800px-Coca-Cola_logo.svg.png" alt="Coca-Cola"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Domino%27s_pizza_logo.svg/800px-Domino%27s_pizza_logo.svg.png" alt="Domino's"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/HEMA_Logo.svg/800px-HEMA_Logo.svg.png" alt="HEMA"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Jumbo_Logo.svg/800px-Jumbo_Logo.svg.png" alt="Jumbo"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/PLUS_supermarket_logo.svg/800px-PLUS_supermarket_logo.svg.png" alt="PLUS"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Spar-logo.svg/800px-Spar-logo.svg.png" alt="SPAR"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Action_Nederland_Logo_2020.svg/800px-Action_Nederland_Logo_2020.svg.png" alt="Action"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Ahold_Delhaize_logo.svg/800px-Ahold_Delhaize_logo.svg.png" alt="Ahold Delhaize"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Logo_Albert_Heijn.svg/800px-Logo_Albert_Heijn.svg.png" alt="Albert Heijn"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Axfood_logo.svg/800px-Axfood_logo.svg.png" alt="Axfood"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Bidfood_logo.svg/800px-Bidfood_logo.svg.png" alt="Bidfood"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/800px-Coca-Cola_logo.svg.png" alt="Coca-Cola"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Domino%27s_pizza_logo.svg/800px-Domino%27s_pizza_logo.svg.png" alt="Domino's"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/HEMA_Logo.svg/800px-HEMA_Logo.svg.png" alt="HEMA"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Jumbo_Logo.svg/800px-Jumbo_Logo.svg.png" alt="Jumbo"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/PLUS_supermarket_logo.svg/800px-PLUS_supermarket_logo.svg.png" alt="PLUS"></div>
+          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Spar-logo.svg/800px-Spar-logo.svg.png" alt="SPAR"></div>
         </div>
       </div>
     </div>
