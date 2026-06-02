@@ -79,10 +79,11 @@ em{font-style:normal;color:var(--teal-l);}
 /* ============ SCENE 1 — HOOK ============ */
 #s1{flex-direction:column;padding:0 200px;align-items:flex-start;}
 .s1-headline{font-weight:700;font-size:96px;line-height:1.06;letter-spacing:-.025em;max-width:1100px;}
-.s1-headline .under{position:relative;}
-.s1-headline .under::after{content:'';position:absolute;left:0;right:0;bottom:-.06em;height:5px;border-radius:4px;
-  background:var(--teal-l);transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ease) .15s;}
-.s1-headline .under.shown::after{transform:scaleX(1);}
+.s1-headline .glow{background:linear-gradient(100deg,#a8e2e9,#32b3c8 40%,#0594a3 60%,#a8e2e9);
+  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:none;}
+.s1-headline .glow.shown{animation:grad-shift 2.8s var(--ease) forwards;}
+@keyframes grad-shift{0%{background-position:100% 0}100%{background-position:0% 0}}
 
 /* ============ SCENE 2 — PRESSURE ============ */
 #s2{flex-direction:column;padding:0 140px;align-items:flex-start;}
@@ -194,7 +195,7 @@ body.clean #ui,body.clean .hint{display:none;}
     <h1 class="s1-headline">
       <span class="ln" data-in="0.4"><span class="lw">The rules of</span></span><br/>
       <span class="ln" data-in="0.6"><span class="lw">global trade are</span></span>
-      <span class="ln under" data-in="0.85"><span class="lw"><em>changing.</em></span></span>
+      <span class="ln" data-in="0.85"><span class="lw"><span class="glow r" data-in="1.0">changing.</span></span></span>
     </h1>
     <div class="rule r d2" data-in="1.2"></div>
   </section>
