@@ -108,19 +108,28 @@ em{font-style:normal;color:var(--teal-l);}
 #s3{padding:0 130px;justify-content:space-between;}
 .s3-left{width:680px;position:relative;height:540px;}
 .s3-right{width:540px;height:480px;position:relative;}
-.s3-lead{position:absolute;left:0;top:40px;width:680px;opacity:1;transition:opacity 0.5s var(--ease);}
-.s3-lead.phase-out{opacity:0;pointer-events:none;}
+.s3-lead{position:absolute;left:0;top:40px;width:680px;opacity:1;transform:translateY(0);
+  transition:opacity 0.7s var(--ease-io),transform 0.7s var(--ease-io);}
+.s3-lead.phase-out{opacity:0;transform:translateY(-10px);pointer-events:none;}
 .s3-lead h2{font-weight:700;font-size:66px;line-height:1.08;letter-spacing:-.025em;}
 .s3-lead .rule{margin-top:30px;}
 .s3-lead p{margin-top:26px;font-size:22px;font-weight:400;line-height:1.55;color:rgba(255,255,255,.78);max-width:560px;}
 .s3-lead p em{font-style:normal;color:var(--teal-l);}
-.s3-caps{position:absolute;left:0;top:30px;width:680px;opacity:0;transition:opacity 0.6s var(--ease);}
-.s3-caps.phase-in{opacity:1;}
+.s3-caps{position:absolute;left:0;top:30px;width:680px;opacity:0;transform:translateY(20px);
+  transition:opacity 0.8s var(--ease-io),transform 0.8s var(--ease-io);}
+.s3-caps.phase-in{opacity:1;transform:none;}
 .s3-caps .lbl{font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal-l);font-weight:600;margin-bottom:12px;}
 .s3-caps .rule{margin-bottom:32px;}
-.caprow{display:flex;align-items:center;gap:22px;margin-bottom:28px;}
-.caprow .ck{width:58px;height:58px;flex:none;border-radius:14px;display:grid;place-items:center;background:var(--mint);}
-.caprow .ck svg{width:28px;height:28px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.caprow{display:flex;align-items:center;gap:22px;margin-bottom:28px;
+  opacity:0;transform:translateX(-30px);transition:opacity 0.7s var(--ease-io),transform 0.7s var(--ease-io);}
+.caprow.shown{opacity:1;transform:none;}
+.caprow.gone{opacity:0;transform:translateX(20px);transition-duration:0.4s;}
+.caprow .ck{width:58px;height:58px;flex:none;border-radius:14px;display:grid;place-items:center;
+  background:var(--mint);box-shadow:0 0 0 rgba(112,203,214,0);transition:box-shadow 0.6s var(--ease) 0.3s;}
+.caprow.shown .ck{box-shadow:0 4px 24px rgba(112,203,214,.25);}
+.caprow .ck svg{width:28px;height:28px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  transform:scale(0.7);opacity:0;transition:transform 0.5s var(--ease) 0.2s,opacity 0.4s var(--ease) 0.2s;}
+.caprow.shown .ck svg{transform:scale(1);opacity:1;}
 .caprow .tt{font-weight:600;font-size:30px;letter-spacing:-.01em;}
 .caprow .tt small{display:block;font-weight:400;font-size:16px;color:rgba(255,255,255,.55);margin-top:2px;}
 .viz{position:absolute;inset:0;}
@@ -250,15 +259,15 @@ body.clean #ui,body.clean .hint{display:none;}
       <div class="s3-caps">
         <div class="lbl r" data-in="23.9">Smart supply-chain intelligence + ESG expertise</div>
         <div class="rule r d1" data-in="24.0"></div>
-        <div class="caprow r" data-in="24.4">
+        <div class="caprow" data-in="24.4">
           <div class="ck"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 21l-4.3-4.3"/></svg></div>
           <div class="tt">Uncover risks<small>see what's hidden in your chain</small></div>
         </div>
-        <div class="caprow r" data-in="27.0">
+        <div class="caprow" data-in="25.8">
           <div class="ck"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/></svg></div>
           <div class="tt">Improve transparency<small>traceable, verifiable, end-to-end</small></div>
         </div>
-        <div class="caprow r" data-in="29.8">
+        <div class="caprow" data-in="27.2">
           <div class="ck"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4-7-10a7 7 0 0 1 14 0c0 6-7 10-7 10z"/><path d="M9 11l2 2 4-4"/></svg></div>
           <div class="tt">Responsible sourcing<small>better for people &amp; planet</small></div>
         </div>
