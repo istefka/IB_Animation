@@ -329,6 +329,7 @@ body.clean #ui,body.clean .hint{display:none;}
   <button id="btnMute">VO</button><button id="btnCap">CC</button>
 </div>
 <audio id="vo" src="/assets/AI_Brechtje.mp3" preload="auto"></audio>
+<audio id="bgm" src="/assets/jonasblakewood-corporate-background-524146.mp3" preload="auto" loop></audio>
 
 <script>
 /* ============================================================
@@ -349,8 +350,9 @@ const END=46.0;
 const CROSSFADES=[2.55,15.0,20.2,35.0];
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const stage=$('#stage'),vo=$('#vo'),capEl=$('#cap'),xfadeEl=$('#xfade'),envelope=$('#envelope'),
+const stage=$('#stage'),vo=$('#vo'),bgm=$('#bgm'),capEl=$('#cap'),xfadeEl=$('#xfade'),envelope=$('#envelope'),
       fill=$('#fill'),timeEl=$('#time'),topbar=$('#topbar'),brandChrome=$('.chrome');
+bgm.volume=0.15;
 const slides=$$('.slide'),reveals=$$('[data-in]').filter(e=>!e.classList.contains('slide'));
 
 function buildLogo(el){const h=+(el.dataset.size||60);el.classList.add('logo');
@@ -493,14 +495,14 @@ function loop(ts){
 requestAnimationFrame(loop);
 
 const btnPlay=$('#btnPlay');
-function play(){playing=true;btnPlay.textContent='Pause';lastTS=0;vo.play().catch(()=>{});}
-function pause(){playing=false;btnPlay.textContent='Play';vo.pause();}
-function restart(){clock=0;VIZ.reset();prevXfade=-1;try{vo.currentTime=0;}catch(e){}if(playing)vo.play().catch(()=>{});setStateAt(0);}
+function play(){playing=true;btnPlay.textContent='Pause';lastTS=0;vo.play().catch(()=>{});bgm.play().catch(()=>{});}
+function pause(){playing=false;btnPlay.textContent='Play';vo.pause();bgm.pause();}
+function restart(){clock=0;VIZ.reset();prevXfade=-1;try{vo.currentTime=0;}catch(e){}try{bgm.currentTime=0;}catch(e){}if(playing){vo.play().catch(()=>{});bgm.play().catch(()=>{});}setStateAt(0);}
 function seek(t){clock=t;try{vo.currentTime=t;}catch(e){}setStateAt(t);}
 
 btnPlay.onclick=()=>playing?pause():play();
 $('#btnRestart').onclick=()=>{restart();if(!playing)play();};
-$('#btnMute').onclick=function(){vo.muted=!vo.muted;this.textContent=vo.muted?'Muted':'VO';};
+$('#btnMute').onclick=function(){vo.muted=!vo.muted;bgm.muted=vo.muted;this.textContent=vo.muted?'Muted':'VO';};
 $('#btnCap').onclick=()=>document.body.classList.toggle('no-captions');
 const bar=$('#bar');bar.onclick=e=>{const r=bar.getBoundingClientRect();seek((e.clientX-r.left)/r.width*END);};
 addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();playing?pause():play();}
