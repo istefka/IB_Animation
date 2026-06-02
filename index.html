@@ -372,7 +372,7 @@ const END=42.0, WIPES=[2.95,18.05,32.1];
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const stage=$('#stage'),vo=$('#vo'),capEl=$('#cap'),wipeEl=$('#wipe'),envelope=$('#envelope'),
-      fill=$('#fill'),timeEl=$('#time'),topbar=$('#topbar'),chrome=$('.chrome');
+      fill=$('#fill'),timeEl=$('#time'),topbar=$('#topbar'),brandChrome=$('.chrome');
 const scenes=$$('.scene'), reveals=$$('[data-in]').filter(e=>!e.classList.contains('scene'));
 
 function buildLogo(el){const h=+(el.dataset.size||60);el.classList.add('logo');
@@ -437,7 +437,7 @@ function setStateAt(now){
     r.classList.remove('shown','gone');if(now>=a&&now<b)r.classList.add('shown');else if(now>=b)r.classList.add('gone');}
   VIZ.frame(now);
   envelope.classList.toggle('shown',now>=32.15&&now<END);
-  chrome.classList.toggle('hide',(now>=15.4&&now<18.05)||now>=32.15);
+  brandChrome.classList.toggle('hide',(now>=15.4&&now<18.05)||now>=32.15);
   let cap=null;for(const l of TIMINGS.lines){if(now>=l.t0-0.15&&now<l.t1+0.35){cap=l.cap;break;}}
   if(cap){capEl.textContent=cap;capEl.classList.add('show');}else capEl.classList.remove('show');
   let wi=-1;for(let i=0;i<WIPES.length;i++)if(now>=WIPES[i]-0.45&&now<WIPES[i]+0.45)wi=i;
