@@ -106,15 +106,14 @@ h1 em,h2 em,.h1 em{font-style:normal;color:var(--teal-l);}
 
 /* SCENE 3 */
 #s3{justify-content:space-between;align-items:center;}
-.s3-left{width:720px;position:relative;}
+.s3-left{width:720px;position:relative;height:560px;}
 .s3-right{width:580px;height:500px;position:relative;}
-.s3-logo{margin-bottom:26px;}
-.s3-lead{position:absolute;left:0;top:118px;width:720px;}
+.s3-lead{position:absolute;left:0;top:20px;width:720px;}
 .s3-lead h2{font-weight:600;font-size:74px;line-height:1.04;letter-spacing:-.022em;}
 .s3-lead .rule{margin-top:34px;}
 .s3-lead p{margin-top:30px;font-size:24px;font-weight:400;line-height:1.5;color:rgba(255,255,255,.82);max-width:600px;}
 .s3-lead p em{font-style:normal;color:var(--teal-l);}
-.s3-caps{position:absolute;left:0;top:70px;width:720px;}
+.s3-caps{position:absolute;left:0;top:20px;width:720px;}
 .s3-caps .lbl{font-size:18px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-l);font-weight:600;margin-bottom:14px;}
 .s3-caps .rule{margin-bottom:34px;}
 .capitem{display:flex;align-items:center;gap:24px;margin-bottom:24px;}
@@ -281,7 +280,6 @@ body.clean #ui,body.clean .hint{display:none;}
     <div class="video-slot"><div class="ph" data-label="▶ Video slot · S3 · ports / logistics / data b-roll"></div></div>
 
     <div class="s3-left">
-      <div class="s3-logo r" data-in="18.25"><span class="logo" data-logo data-size="40"></span></div>
 
       <!-- phase A: the value -->
       <div class="s3-lead">
@@ -339,9 +337,9 @@ body.clean #ui,body.clean .hint{display:none;}
     </div>
 
     <div class="endcard">
-      <div class="r sc" data-in="37.3"><span class="logo" data-logo data-size="104"></span></div>
-      <div class="desc r" data-in="38.0"><em>Decision Intelligence</em> Platform</div>
-      <div class="url r" data-in="38.7">impactbuying.com</div>
+      <div class="r sc" data-in="38.0"><span class="logo" data-logo data-size="104"></span></div>
+      <div class="desc r" data-in="38.5"><em>Decision Intelligence</em> Platform</div>
+      <div class="url r" data-in="39.1">impactbuying.com</div>
     </div>
   </section>
 
@@ -451,7 +449,7 @@ function setStateAt(now){
     r.classList.remove('shown','gone');if(now>=a&&now<b)r.classList.add('shown');else if(now>=b)r.classList.add('gone');}
   VIZ.frame(now);
   envelope.classList.toggle('shown',now>=32.15&&now<END);
-  brandChrome.classList.toggle('hide',(now>=15.4&&now<18.05)||now>=32.15);
+  brandChrome.classList.toggle('hide',(now>=15.4&&now<18.3)||now>=32.15);
   let cap=null;for(const l of TIMINGS.lines){if(now>=l.t0-0.15&&now<l.t1+0.35){cap=l.cap;break;}}
   if(cap){capEl.textContent=cap;capEl.classList.add('show');}else capEl.classList.remove('show');
   let wi=-1;for(let i=0;i<WIPES.length;i++)if(now>=WIPES[i]-0.45&&now<WIPES[i]+0.45)wi=i;
