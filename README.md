@@ -68,6 +68,13 @@ brand scrim so text stays legible. Toggle the slot labels with the **V** key (or
 Suggested footage per scene: **S1** global trade / shipping · **S2** people, city,
 factory · **S3** ports, logistics, data · **S4** nature / aerial forest.
 
+There's also a **hexagon-shaped image slot** in the ~16s brand bridge (the
+`.hex.media` element). Drop a photo or video in there:
+
+```html
+<div class="hex media"><img src="assets/footage/brand.jpg"></div>
+```
+
 ## Controls & URL flags
 
 | Key | Action | | URL flag | Effect |

@@ -41,8 +41,9 @@ html,body{height:100%;background:#02141d;overflow:hidden;font-family:var(--font)
 .topbar{position:absolute;left:0;top:0;height:3px;width:0;z-index:8;background:var(--teal-l);box-shadow:0 0 12px rgba(112,203,214,.7);}
 
 /* persistent brand chrome (top-left logo) */
-.chrome{position:absolute;left:96px;top:60px;z-index:7;}
-.chrome img{height:30px;width:auto;display:block;opacity:.9;}
+.chrome{position:absolute;left:96px;top:60px;z-index:7;opacity:.9;transition:opacity .5s var(--e);}
+.chrome img{height:30px;width:auto;display:block;}
+.chrome.hide{opacity:0;}
 
 /* ---------------- VIDEO PLACEHOLDER SLOTS ---------------- */
 .video-slot{position:absolute;inset:0;z-index:0;overflow:hidden;}
@@ -129,6 +130,26 @@ h1 em,h2 em,.h1 em{font-style:normal;color:var(--teal-l);}
 @keyframes ring{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(1.9)}}
 .node .ic{stroke:#bfeef4;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
+/* BRIDGE (~16s · brand positioning) */
+#s2b{justify-content:space-between;align-items:center;padding:0 150px;}
+.bridge-text{width:760px;}
+.bridge-text .logo{margin-bottom:24px;}
+.bridge-tag{font-weight:600;font-size:58px;line-height:1.06;letter-spacing:-.022em;}
+.bridge-tag em{font-style:normal;color:var(--teal-l);}
+.bridge-text .rule{margin-top:30px;}
+.bridge-sub{margin-top:28px;font-size:24px;font-weight:400;line-height:1.5;color:rgba(255,255,255,.82);max-width:580px;}
+/* hexagon image-in-a-shape (brand motif) */
+.bridge-shape{width:430px;height:540px;position:relative;flex:none;}
+.hex{position:absolute;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);}
+.hex.rim{inset:0;background:linear-gradient(155deg,var(--teal-l),var(--teal) 70%);}
+.hex.media{inset:5px;overflow:hidden;}
+.hex.media video,.hex.media img{width:100%;height:100%;object-fit:cover;}
+.hex.media .ph{position:absolute;inset:0;background:
+  repeating-linear-gradient(135deg,rgba(0,129,143,.10) 0 20px,rgba(0,129,143,.20) 20px 40px),linear-gradient(150deg,#0a4450,#04212a);}
+.hex.media .ph::after{content:"IMAGE / VIDEO";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-size:15px;letter-spacing:.22em;font-weight:600;color:rgba(168,226,233,.6);}
+body:not(.show-slots) .hex.media .ph::after{display:none;}
+
 /* SCENE 4 */
 #s4{flex-direction:column;align-items:center;justify-content:center;text-align:center;}
 .s4-pre{font-weight:500;font-size:30px;letter-spacing:.02em;color:rgba(255,255,255,.85);}
@@ -200,7 +221,7 @@ body.clean #ui,body.clean .hint{display:none;}
   </section>
 
   <!-- ============ SCENE 2 ============ -->
-  <section class="scene" id="s2" data-in="3.0" data-out="17.95">
+  <section class="scene" id="s2" data-in="3.0" data-out="15.3">
     <div class="video-slot"><div class="ph" data-label="▶ Video slot · S2 · people / city / factory b-roll"></div></div>
     <div class="eyebrow s2-head r" data-in="3.05"><span class="pin"></span><span>A new era of accountability</span></div>
     <div class="rule r d1" data-in="3.15"></div>
@@ -223,21 +244,40 @@ body.clean #ui,body.clean .hint{display:none;}
     </div>
   </section>
 
+  <!-- ============ BRIDGE · brand positioning (~16s) ============ -->
+  <section class="scene" id="s2b" data-in="15.4" data-out="18.05">
+    <div class="video-slot"><div class="ph" data-label="▶ Video slot · bridge · subtle texture / dark b-roll"></div></div>
+    <div class="bridge-text">
+      <div class="r" data-in="15.7"><span class="logo" data-logo data-size="40"></span></div>
+      <div class="bridge-tag">
+        <span class="line" data-in="16.0"><span class="iw">a <em>Decision</em></span></span><br/>
+        <span class="line" data-in="16.2"><span class="iw"><em>Intelligence</em> Platform</span></span>
+      </div>
+      <div class="rule r d2" data-in="16.5"></div>
+      <p class="bridge-sub r d2" data-in="16.8">We turn supply-chain complexity into decisions you can trust.</p>
+    </div>
+    <div class="bridge-shape r sc" data-in="15.6">
+      <div class="hex rim"></div>
+      <div class="hex media"><!-- drop <img>/<video> here --><div class="ph"></div></div>
+    </div>
+  </section>
+
   <!-- ============ SCENE 3 ============ -->
   <section class="scene" id="s3" data-in="18.1" data-out="32.0">
     <div class="video-slot"><div class="ph" data-label="▶ Video slot · S3 · ports / logistics / data b-roll"></div></div>
 
     <div class="s3-left">
-      <div class="s3-logo r" data-in="18.25"><span class="logo" data-logo data-size="48"></span></div>
+      <div class="s3-logo r" data-in="18.25"><span class="logo" data-logo data-size="40"></span></div>
 
-      <!-- phase A: positioning -->
+      <!-- phase A: the value -->
       <div class="s3-lead">
         <h2>
-          <span class="line" data-in="18.6" data-out="23.4"><span class="iw">The <em>Decision</em></span></span><br/>
-          <span class="line" data-in="18.85" data-out="23.4"><span class="iw"><em>Intelligence</em> Platform</span></span>
+          <span class="line" data-in="18.6" data-out="23.4"><span class="iw">We turn <em>complex</em></span></span><br/>
+          <span class="line" data-in="18.85" data-out="23.4"><span class="iw"><em>supply chains</em></span></span><br/>
+          <span class="line" data-in="19.1" data-out="23.4"><span class="iw">into positive impact.</span></span>
         </h2>
-        <div class="rule r d2" data-in="19.2" data-out="23.4"></div>
-        <p class="r d2" data-in="19.7" data-out="23.4">We turn complex supply chains into opportunities for <em>positive impact</em>.</p>
+        <div class="rule r d2" data-in="19.5" data-out="23.4"></div>
+        <p class="r d2" data-in="19.9" data-out="23.4">Smart supply-chain intelligence, built for <em>decisions</em>.</p>
       </div>
 
       <!-- phase B: capabilities -->
@@ -286,7 +326,7 @@ body.clean #ui,body.clean .hint{display:none;}
 
     <div class="endcard">
       <div class="r sc" data-in="37.3"><span class="logo" data-logo data-size="104"></span></div>
-      <div class="desc r" data-in="38.0">The <em>Decision Intelligence</em> Platform</div>
+      <div class="desc r" data-in="38.0">a <em>Decision Intelligence</em> Platform</div>
       <div class="url r" data-in="38.7">impactbuying.com</div>
     </div>
   </section>
@@ -332,7 +372,7 @@ const END=42.0, WIPES=[2.95,18.05,32.1];
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const stage=$('#stage'),vo=$('#vo'),capEl=$('#cap'),wipeEl=$('#wipe'),envelope=$('#envelope'),
-      fill=$('#fill'),timeEl=$('#time'),topbar=$('#topbar');
+      fill=$('#fill'),timeEl=$('#time'),topbar=$('#topbar'),chrome=$('.chrome');
 const scenes=$$('.scene'), reveals=$$('[data-in]').filter(e=>!e.classList.contains('scene'));
 
 function buildLogo(el){const h=+(el.dataset.size||60);el.classList.add('logo');
@@ -397,6 +437,7 @@ function setStateAt(now){
     r.classList.remove('shown','gone');if(now>=a&&now<b)r.classList.add('shown');else if(now>=b)r.classList.add('gone');}
   VIZ.frame(now);
   envelope.classList.toggle('shown',now>=32.15&&now<END);
+  chrome.classList.toggle('hide',(now>=15.4&&now<18.05)||now>=32.15);
   let cap=null;for(const l of TIMINGS.lines){if(now>=l.t0-0.15&&now<l.t1+0.35){cap=l.cap;break;}}
   if(cap){capEl.textContent=cap;capEl.classList.add('show');}else capEl.classList.remove('show');
   let wi=-1;for(let i=0;i<WIPES.length;i++)if(now>=WIPES[i]-0.45&&now<WIPES[i]+0.45)wi=i;
