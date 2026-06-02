@@ -152,7 +152,7 @@ em{font-style:normal;color:var(--teal-l);}
 .pillar .pic{width:72px;height:72px;border-radius:16px;display:grid;place-items:center;background:var(--mint);box-shadow:0 16px 48px rgba(0,8,12,.4);}
 .pillar .pic svg{width:36px;height:36px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .pillar .pw{font-weight:700;font-size:36px;letter-spacing:-.02em;color:var(--teal-l);}
-.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 130px;gap:0;z-index:5;}
+.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 130px;gap:0;}
 .endcard .logo-wrap{display:flex;align-items:center;gap:0;}
 .endcard .desc{margin-top:48px;font-size:62px;font-weight:700;color:#fff;letter-spacing:-.025em;line-height:1.1;}
 .endcard .desc em{font-style:normal;color:var(--teal-l);font-weight:700;}
@@ -584,7 +584,7 @@ function setStateAt(now){
   if(s3Caps)s3Caps.classList.toggle('phase-in',now>=26.7);
   const s3Right=$('.s3-right');
   if(s3Right)s3Right.classList.toggle('viz-center',now>=26.4&&now<29.8);
-  envelope.classList.toggle('shown',now>=35.1&&now<END);
+  envelope.classList.toggle('shown',now>=35.1&&now<42.0);
   brandChrome.classList.toggle('hide',(now>=15.1&&now<20.5)||now>=35.1);
 
   let cap=null;for(const l of TIMINGS.lines){if(now>=l.t0-0.15&&now<l.t1+0.35){cap=l.cap;break;}}
