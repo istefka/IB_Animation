@@ -152,7 +152,7 @@ em{font-style:normal;color:var(--teal-l);}
 .pillar .pic{width:72px;height:72px;border-radius:16px;display:grid;place-items:center;background:var(--mint);box-shadow:0 16px 48px rgba(0,8,12,.4);}
 .pillar .pic svg{width:36px;height:36px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .pillar .pw{font-weight:700;font-size:36px;letter-spacing:-.02em;color:var(--teal-l);}
-.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 130px;gap:0;}
+.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 130px;gap:0;z-index:5;}
 .endcard .logo-wrap{display:flex;align-items:center;gap:0;}
 .endcard .desc{margin-top:48px;font-size:62px;font-weight:700;color:#fff;letter-spacing:-.025em;line-height:1.1;}
 .endcard .desc em{font-style:normal;color:var(--teal-l);font-weight:700;}
@@ -316,28 +316,42 @@ body.clean #ui,body.clean .hint{display:none;}
       <div class="ticker-wrap r" data-in="43.5">
         <div class="ticker-label">Trusted by leading brands worldwide</div>
         <div class="ticker-track" id="logoTicker">
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Action_Nederland_Logo_2020.svg/800px-Action_Nederland_Logo_2020.svg.png" alt="Action"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Ahold_Delhaize_logo.svg/800px-Ahold_Delhaize_logo.svg.png" alt="Ahold Delhaize"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Logo_Albert_Heijn.svg/800px-Logo_Albert_Heijn.svg.png" alt="Albert Heijn"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Axfood_logo.svg/800px-Axfood_logo.svg.png" alt="Axfood"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Bidfood_logo.svg/800px-Bidfood_logo.svg.png" alt="Bidfood"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/800px-Coca-Cola_logo.svg.png" alt="Coca-Cola"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Domino%27s_pizza_logo.svg/800px-Domino%27s_pizza_logo.svg.png" alt="Domino's"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/HEMA_Logo.svg/800px-HEMA_Logo.svg.png" alt="HEMA"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Jumbo_Logo.svg/800px-Jumbo_Logo.svg.png" alt="Jumbo"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/PLUS_supermarket_logo.svg/800px-PLUS_supermarket_logo.svg.png" alt="PLUS"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Spar-logo.svg/800px-Spar-logo.svg.png" alt="SPAR"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Action_Nederland_Logo_2020.svg/800px-Action_Nederland_Logo_2020.svg.png" alt="Action"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Ahold_Delhaize_logo.svg/800px-Ahold_Delhaize_logo.svg.png" alt="Ahold Delhaize"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Logo_Albert_Heijn.svg/800px-Logo_Albert_Heijn.svg.png" alt="Albert Heijn"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Axfood_logo.svg/800px-Axfood_logo.svg.png" alt="Axfood"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Bidfood_logo.svg/800px-Bidfood_logo.svg.png" alt="Bidfood"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/800px-Coca-Cola_logo.svg.png" alt="Coca-Cola"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Domino%27s_pizza_logo.svg/800px-Domino%27s_pizza_logo.svg.png" alt="Domino's"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/HEMA_Logo.svg/800px-HEMA_Logo.svg.png" alt="HEMA"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Jumbo_Logo.svg/800px-Jumbo_Logo.svg.png" alt="Jumbo"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/PLUS_supermarket_logo.svg/800px-PLUS_supermarket_logo.svg.png" alt="PLUS"></div>
-          <div class="ticker-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Spar-logo.svg/800px-Spar-logo.svg.png" alt="SPAR"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Action.svg" alt="Action"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Ahold-Delhaize.svg" alt="Ahold Delhaize"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/AH.svg" alt="Albert Heijn"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Axfood.svg" alt="Axfood"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/Bidfood_FOODSERVICE-1024x281.png" alt="Bidfood"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/bofrost.png" alt="bofrost"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Coop.svg" alt="Coop"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/logo-dagab-1024x227.png" alt="Dagab"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/Dominos-Emblem-1024x576.png" alt="Domino's"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/emd-logo.png" alt="EMD"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Jumbo.svg" alt="Jumbo"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/08/Maxeda.png" alt="Maxeda"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/maxi-seeklogo-1024x293.png" alt="Maxi"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/AholdDelhaize_Logo_Mega_Image_Romania_.png" alt="Mega Image"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/superunit-Compressify.io_.png" alt="Superunie"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Vion-Food-Group.svg" alt="Vion Food Group"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/Alfa-Beta_Vassilopoulos_logo.svg-1024x224.png" alt="Alfa-Beta"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/5a0c72949642de34b6b65ceb-1024x1024.png" alt="Partner"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Action.svg" alt="Action"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Ahold-Delhaize.svg" alt="Ahold Delhaize"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/AH.svg" alt="Albert Heijn"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Axfood.svg" alt="Axfood"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/Bidfood_FOODSERVICE-1024x281.png" alt="Bidfood"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/bofrost.png" alt="bofrost"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Coop.svg" alt="Coop"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/logo-dagab-1024x227.png" alt="Dagab"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/Dominos-Emblem-1024x576.png" alt="Domino's"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/emd-logo.png" alt="EMD"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Jumbo.svg" alt="Jumbo"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/08/Maxeda.png" alt="Maxeda"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/maxi-seeklogo-1024x293.png" alt="Maxi"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/AholdDelhaize_Logo_Mega_Image_Romania_.png" alt="Mega Image"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/superunit-Compressify.io_.png" alt="Superunie"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Vion-Food-Group.svg" alt="Vion Food Group"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/Alfa-Beta_Vassilopoulos_logo.svg-1024x224.png" alt="Alfa-Beta"></div>
+          <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/5a0c72949642de34b6b65ceb-1024x1024.png" alt="Partner"></div>
         </div>
       </div>
     </div>
