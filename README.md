@@ -106,7 +106,15 @@ placement. It appears in Scene 3 (small, 44px tall) and the Scene 4 end card
 on the `[data-logo]` spans in `index.html`; to update the artwork, replace
 `assets/logo.svg`.
 
-## Brand tokens (from the PPWR white paper)
+## Brand tokens (ImpactBuying design system + PPWR white paper)
+
+Aligned to the ImpactBuying design system: `--ink #052433`, `--teal #00818F`,
+`--teal-l #70cbd6`, `--mint #e6f4f5`, `--paper #f4faf9`. Headlines are **Poppins
+600** with **teal `<em>` emphasis** (`#70cbd6`), uppercase teal eyebrows, short
+teal rule bars, and mint icon tiles — the system's core patterns. ImpactBuying
+is positioned on screen as **"The Decision Intelligence Platform"** at the brand
+reveal (~18.3s) and on the end card.
+
 
 - **Background:** `#003038` / `#0e2232` (deep teal-navy)
 - **Accents:** `#06a9ba`, `#0594a3`, `#00818f` · **light:** `#70cbd6`, `#a8e2e9`, `#d8f3f6`
