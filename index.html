@@ -265,15 +265,15 @@ body.clean #ui,body.clean .hint{display:none;}
       <div class="s3-caps">
         <div class="lbl r" data-in="26.8">Smart technology + ESG expertise</div>
         <div class="rule r d1" data-in="26.9"></div>
-        <div class="caprow" data-in="27.4">
+        <div class="caprow" data-in="30.2">
           <div class="ck"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 21l-4.3-4.3"/></svg></div>
           <div class="tt">Uncover risks<small>see what's hidden in your chain</small></div>
         </div>
-        <div class="caprow" data-in="30.0">
+        <div class="caprow" data-in="31.8">
           <div class="ck"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/></svg></div>
           <div class="tt">Improve transparency<small>traceable, verifiable, end-to-end</small></div>
         </div>
-        <div class="caprow" data-in="32.5">
+        <div class="caprow" data-in="33.3">
           <div class="ck"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4-7-10a7 7 0 0 1 14 0c0 6-7 10-7 10z"/><path d="M9 11l2 2 4-4"/></svg></div>
           <div class="tt">Responsible sourcing<small>better for people &amp; planet</small></div>
         </div>
@@ -425,19 +425,19 @@ const VIZ=(()=>{
       n.g.style.opacity=on?1:0;});
 
     // Capability 1 — highlight factory node + adjacent segments
-    hot(1,now>=27.4&&now<29.0);
-    seg(0,now>=27.4&&now<29.0);
+    hot(1,now>=30.2&&now<31.6);
+    seg(0,now>=30.2&&now<31.6);
 
     // Capability 2 — highlight logistics + retail (transparency across chain)
-    hot(2,now>=30.0&&now<32.0);
-    hot(3,now>=30.2&&now<32.0);
-    seg(1,now>=30.0&&now<32.0);
-    seg(2,now>=30.0&&now<32.0);
+    hot(2,now>=31.8&&now<33.1);
+    hot(3,now>=32.0&&now<33.1);
+    seg(1,now>=31.8&&now<33.1);
+    seg(2,now>=31.8&&now<33.1);
 
     // Capability 3 — highlight endpoints (origin + impact)
-    hot(0,now>=32.5&&now<34.2);
-    hot(4,now>=32.7&&now<34.2);
-    seg(3,now>=32.5&&now<34.2);
+    hot(0,now>=33.3&&now<34.8);
+    hot(4,now>=33.5&&now<34.8);
+    seg(3,now>=33.3&&now<34.8);
   }
   function hot(i,on){const n=nodes[i];if(!n.g)return;
     if(on&&!prevHot[i])n.g.classList.add('hot');
