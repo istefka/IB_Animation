@@ -97,9 +97,22 @@ const END = await page.evaluate(() => window.ANIM_END);
 // hold a clean frame-0 (kills the white default-background flash) before playing
 await page.evaluate(() => { try { playing = false; lastTS = 0; window.renderAt(0); } catch (e) {} });
 await page.waitForTimeout(500);
-// start playback; remember exactly when, so we can trim the lead-in to match the VO
+// start playback; remember exactly when, so we can trim the lead-in to match the VO.
+// Drive the clock off TRUE elapsed wall-time (uncapped) instead of the page's own
+// rAF loop — the page caps per-frame dt at 0.1s, so under slow headless rendering
+// its clock falls behind wall-time and the captured content lags the schedule
+// (e.g. the ticker barely appears). recordVideo timestamps by wall-time, so
+// clock == wall-time keeps every frame on schedule.
 const tPlay = Date.now();
-await page.evaluate(() => { try { clock = 0; lastTS = 0; playing = true; } catch (e) {} });
+await page.evaluate((end) => {
+  try { playing = false; } catch (e) {}
+  const t0 = performance.now();
+  (function tick() {
+    const t = (performance.now() - t0) / 1000;
+    window.renderAt(Math.min(t, end));
+    if (t < end + 0.2) requestAnimationFrame(tick);
+  })();
+}, END);
 console.log(`  playing ${END.toFixed(1)}s in real time…`);
 await page.waitForTimeout(Math.ceil(END * 1000) + 150);
 await ctx.close();               // finalizes the .webm
