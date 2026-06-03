@@ -19,6 +19,7 @@
 import { chromium } from 'playwright';
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, rmSync, readFileSync, writeFileSync, existsSync, createReadStream, statSync } from 'node:fs';
+import { writeFile } from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -30,7 +31,7 @@ const NAME = HTML.replace(/\.html?$/i, '').replace(/[\\/]+/g, '-');
 const OUT = path.join(ROOT, 'build', `${NAME}.mp4`);
 const TMP = path.join(ROOT, 'build', '_rec');
 const FRAMES = path.join(TMP, 'frames');
-const FPS = 60;
+const FPS = +(process.env.FPS) || 60;   // override with FPS=30 for heavier (footage) renders
 
 // --- audio tracks referenced by the page (<audio id="vo"/"bgm" src="...">) ---
 const html = readFileSync(path.join(ROOT, HTML), 'utf8');
@@ -73,7 +74,7 @@ const resolveFile = (urlPath) => {
 // CAN decode) and serve the page with rewritten <source>s. Corrupt/missing
 // clips fall back to the first valid one so no slot is ever black.
 const ffmpeg = process.env.FFMPEG || 'ffmpeg';
-const WEBM = path.join(TMP, 'webm');
+const WEBM = path.join(ROOT, 'build', '_webmcache');   // persistent: not wiped between runs
 mkdirSync(WEBM, { recursive: true });
 let servedHtml = html;
 const mp4srcs = [...html.matchAll(/src=["']([^"']+\.mp4)["']\s+type=["']video\/mp4["']/gi)].map(m => m[1]);
@@ -148,13 +149,16 @@ await page.waitForTimeout(200);
 
 // --- capture frames via screencast (each frame has a real timestamp) ----------
 const frames = [];
+const writes = [];
 let fi = 0, t0 = null;
 cdp.on('Page.screencastFrame', (ev) => {
   cdp.send('Page.screencastFrameAck', { sessionId: ev.sessionId }).catch(() => {});
   const ts = ev.metadata.timestamp;
   if (t0 === null) t0 = ts;
   const file = path.join(FRAMES, `f${String(fi++).padStart(6, '0')}.jpg`);
-  writeFileSync(file, Buffer.from(ev.data, 'base64'));
+  // async write so disk I/O never blocks frame capture (prevents stalls/steps
+  // at heavy moments like the ~15s crossfade)
+  writes.push(writeFile(file, Buffer.from(ev.data, 'base64')));
   frames.push({ rel: ts - t0, file });
 });
 // JPEG (high quality) screencast is much faster to encode/transfer than PNG,
@@ -177,6 +181,7 @@ await cdp.send('Page.stopScreencast').catch(() => {});
 await page.waitForTimeout(150);
 await browser.close();
 server.close();
+await Promise.allSettled(writes);   // ensure every frame finished writing
 
 if (!frames.length) { console.error('No frames captured.'); process.exit(1); }
 frames.sort((a, b) => a.rel - b.rel);

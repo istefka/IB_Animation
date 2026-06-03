@@ -4,9 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ImpactBuying — Brand Animation (Footage Version)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<style>
+/* Poppins bundled locally (no Google Fonts CDN dependency) */
+@font-face{font-family:'Poppins';font-weight:400;font-display:block;src:url('/assets/fonts/Poppins-Regular.ttf') format('truetype');}
+@font-face{font-family:'Poppins';font-weight:500;font-display:block;src:url('/assets/fonts/Poppins-Medium.ttf') format('truetype');}
+@font-face{font-family:'Poppins';font-weight:600;font-display:block;src:url('/assets/fonts/Poppins-SemiBold.ttf') format('truetype');}
+@font-face{font-family:'Poppins';font-weight:700;font-display:block;src:url('/assets/fonts/Poppins-Bold.ttf') format('truetype');}
+@font-face{font-family:'Poppins';font-weight:800;font-display:block;src:url('/assets/fonts/Poppins-ExtraBold.ttf') format('truetype');}
+</style>
 <style>
 :root{
   --ink:#052433;--teal:#00818f;--teal-l:#70cbd6;--mint:#e6f4f5;
@@ -152,7 +157,7 @@ em{font-style:normal;color:var(--teal-l);}
 .endcard .url.shown{opacity:.85;}
 .ticker-wrap{position:absolute;bottom:50px;left:0;right:0;overflow:hidden;z-index:8;}
 .ticker-label{text-align:center;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:#ffffff;font-weight:400;margin-bottom:96px;}
-.ticker-track{display:flex;animation:tickerScroll 60s linear infinite;align-items:center;white-space:nowrap;width:max-content;}
+.ticker-track{display:flex;animation:tickerScroll 80s linear infinite;align-items:center;white-space:nowrap;width:max-content;will-change:transform;}
 .ticker-item{flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:10px;padding:12px 24px;margin:0 12px;height:65px;min-width:120px;}
 .ticker-item img{height:38px;max-width:135px;object-fit:contain;}
 @keyframes tickerScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
@@ -333,42 +338,38 @@ body.ui-hidden .hint{opacity:0;pointer-events:none;transition:opacity .3s ease;}
   <div class="ticker-wrap r" data-in="44.5">
     <div class="ticker-label">Trusted by leading brands worldwide</div>
     <div class="ticker-track" id="logoTicker">
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Action.svg" alt="Action"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Ahold-Delhaize.svg" alt="Ahold Delhaize"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/AH.svg" alt="Albert Heijn"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Axfood.svg" alt="Axfood"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/Bidfood_FOODSERVICE-1024x281.png" alt="Bidfood"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/bofrost.png" alt="bofrost"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Coop.svg" alt="Coop"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/logo-dagab-1024x227.png" alt="Dagab"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/Dominos-Emblem-1024x576.png" alt="Domino's"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/emd-logo.png" alt="EMD"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Jumbo.svg" alt="Jumbo"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/08/Maxeda.png" alt="Maxeda"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/maxi-seeklogo-1024x293.png" alt="Maxi"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/AholdDelhaize_Logo_Mega_Image_Romania_.png" alt="Mega Image"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/superunit-Compressify.io_.png" alt="Superunie"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Vion-Food-Group.svg" alt="Vion Food Group"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/Alfa-Beta_Vassilopoulos_logo.svg-1024x224.png" alt="Alfa-Beta"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/5a0c72949642de34b6b65ceb-1024x1024.png" alt="Partner"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Action.svg" alt="Action"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Ahold-Delhaize.svg" alt="Ahold Delhaize"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/AH.svg" alt="Albert Heijn"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Axfood.svg" alt="Axfood"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/Bidfood_FOODSERVICE-1024x281.png" alt="Bidfood"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/bofrost.png" alt="bofrost"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Coop.svg" alt="Coop"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/logo-dagab-1024x227.png" alt="Dagab"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/Dominos-Emblem-1024x576.png" alt="Domino's"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/emd-logo.png" alt="EMD"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Jumbo.svg" alt="Jumbo"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/08/Maxeda.png" alt="Maxeda"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/maxi-seeklogo-1024x293.png" alt="Maxi"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/AholdDelhaize_Logo_Mega_Image_Romania_.png" alt="Mega Image"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/02/superunit-Compressify.io_.png" alt="Superunie"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2024/10/Vion-Food-Group.svg" alt="Vion Food Group"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/Alfa-Beta_Vassilopoulos_logo.svg-1024x224.png" alt="Alfa-Beta"></div>
-      <div class="ticker-item"><img src="https://impactbuying.com/wp-content/uploads/2025/04/5a0c72949642de34b6b65ceb-1024x1024.png" alt="Partner"></div>
+      <div class="ticker-item"><img src="/assets/logos/action.png" alt="Action"></div>
+      <div class="ticker-item"><img src="/assets/logos/albert-heijn.png" alt="Albert Heijn"></div>
+      <div class="ticker-item"><img src="/assets/logos/axfood.png" alt="Axfood"></div>
+      <div class="ticker-item"><img src="/assets/logos/bidfood.png" alt="Bidfood"></div>
+      <div class="ticker-item"><img src="/assets/logos/brico.png" alt="Brico"></div>
+      <div class="ticker-item"><img src="/assets/logos/coca-cola.png" alt="Coca-Cola"></div>
+      <div class="ticker-item"><img src="/assets/logos/coop.svg" alt="Coop"></div>
+      <div class="ticker-item"><img src="/assets/logos/dagab.png" alt="Dagab"></div>
+      <div class="ticker-item"><img src="/assets/logos/dominos.png" alt="Domino's"></div>
+      <div class="ticker-item"><img src="/assets/logos/globus.svg" alt="Globus"></div>
+      <div class="ticker-item"><img src="/assets/logos/hema.png" alt="HEMA"></div>
+      <div class="ticker-item"><img src="/assets/logos/jumbo.png" alt="Jumbo"></div>
+      <div class="ticker-item"><img src="/assets/logos/plus.png" alt="PLUS"></div>
+      <div class="ticker-item"><img src="/assets/logos/refresco.png" alt="Refresco"></div>
+      <div class="ticker-item"><img src="/assets/logos/spar.png" alt="SPAR"></div>
+      <div class="ticker-item"><img src="/assets/logos/avocado.png" alt="Avocado"></div>
+      <div class="ticker-item"><img src="/assets/logos/action.png" alt="Action"></div>
+      <div class="ticker-item"><img src="/assets/logos/albert-heijn.png" alt="Albert Heijn"></div>
+      <div class="ticker-item"><img src="/assets/logos/axfood.png" alt="Axfood"></div>
+      <div class="ticker-item"><img src="/assets/logos/bidfood.png" alt="Bidfood"></div>
+      <div class="ticker-item"><img src="/assets/logos/brico.png" alt="Brico"></div>
+      <div class="ticker-item"><img src="/assets/logos/coca-cola.png" alt="Coca-Cola"></div>
+      <div class="ticker-item"><img src="/assets/logos/coop.svg" alt="Coop"></div>
+      <div class="ticker-item"><img src="/assets/logos/dagab.png" alt="Dagab"></div>
+      <div class="ticker-item"><img src="/assets/logos/dominos.png" alt="Domino's"></div>
+      <div class="ticker-item"><img src="/assets/logos/globus.svg" alt="Globus"></div>
+      <div class="ticker-item"><img src="/assets/logos/hema.png" alt="HEMA"></div>
+      <div class="ticker-item"><img src="/assets/logos/jumbo.png" alt="Jumbo"></div>
+      <div class="ticker-item"><img src="/assets/logos/plus.png" alt="PLUS"></div>
+      <div class="ticker-item"><img src="/assets/logos/refresco.png" alt="Refresco"></div>
+      <div class="ticker-item"><img src="/assets/logos/spar.png" alt="SPAR"></div>
+      <div class="ticker-item"><img src="/assets/logos/avocado.png" alt="Avocado"></div>
     </div>
   </div>
 
