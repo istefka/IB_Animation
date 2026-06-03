@@ -28,7 +28,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dir, '..');
 const HTML = process.argv[2] || 'index.html';
-const NAME = path.basename(HTML).replace(/\.html?$/i, '');
+const NAME = HTML.replace(/\.html?$/i, '').replace(/[\\/]+/g, '-'); // FootageX/index.html -> FootageX-index
 const OUT = path.join(ROOT, 'build', `${NAME}.mp4`);
 const TMP = path.join(ROOT, 'build', '_rec');
 
