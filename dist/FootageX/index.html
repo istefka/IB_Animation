@@ -222,7 +222,7 @@ body.ui-hidden .hint{opacity:0;pointer-events:none;transition:opacity .3s ease;}
 
   <div class="vig"></div>
   <div class="topbar" id="topbar"></div>
-  <div class="chrome"><img src="assets/logo.svg" alt="ImpactBuying"></div>
+  <div class="chrome"><img src="/assets/logo.svg" alt="ImpactBuying"></div>
 
   <!-- ============ SCENE 1 — HOOK ============ -->
   <section class="slide" id="s1" data-in="0" data-out="2.55">
@@ -267,7 +267,7 @@ body.ui-hidden .hint{opacity:0;pointer-events:none;transition:opacity .3s ease;}
       </div>
       <p class="bridge-sub r d3" data-in="17.0">We turn supply-chain complexity into decisions you can trust.</p>
     </div>
-    <img class="bridge-img r sfr" data-in="15.5" src="./photo-thing.png" alt=""/>
+    <img class="bridge-img r sfr" data-in="15.5" src="/assets/photo-thing-BaUoe1Bo.png" alt=""/>
   </section>
 
   <!-- ============ SCENE 3 — SOLUTION ============ -->
@@ -443,18 +443,18 @@ const vidWasActive=vidEls.map(()=>false);
 function updateVideoBg(now){
   VID_SCHEDULE.forEach((sch,i)=>{
     const active=now>=sch.start&&now<sch.end;
-    if(active&&!vidWasActive[i]){
+    if(active&&!vidWasActive[i]&&playing){
       try{vidEls[i].currentTime=0;}catch(e){}
       vidEls[i].play().catch(()=>{});
     }
-    vidWasActive[i]=active;
+    if(playing)vidWasActive[i]=active;
     vidEls[i].classList.toggle('active',active);
   });
 }
 
 function buildLogo(el){const h=+(el.dataset.size||60);el.classList.add('logo');
   const chromeImg=document.querySelector('.chrome img');
-  const logoSrc=chromeImg?chromeImg.src:'assets/logo.svg';
+  const logoSrc=chromeImg?chromeImg.src:'/assets/logo.svg';
   el.innerHTML=`<img class="logo-img" src="${logoSrc}" alt="ImpactBuying" style="height:${h}px">`;}
 $$('[data-logo]').forEach(buildLogo);
 
