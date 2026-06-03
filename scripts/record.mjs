@@ -20,7 +20,8 @@
  */
 import { chromium } from 'playwright';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, rmSync, readFileSync, existsSync } from 'node:fs';
+import { mkdirSync, rmSync, readFileSync, existsSync, createReadStream, statSync } from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -50,6 +51,29 @@ rmSync(TMP, { recursive: true, force: true });
 mkdirSync(TMP, { recursive: true });
 mkdirSync(path.join(ROOT, 'build'), { recursive: true });
 
+// --- tiny static server so absolute "/assets/..." paths resolve (the footage
+//     version uses them, and <video> needs a real server, not file://) -------
+const MIME = { '.html':'text/html', '.js':'text/javascript', '.css':'text/css',
+  '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.mp4':'video/mp4',
+  '.mp3':'audio/mpeg', '.ttf':'font/ttf', '.woff2':'font/woff2', '.json':'application/json' };
+const resolveFile = (urlPath) => {
+  const clean = decodeURIComponent(urlPath.split('?')[0]).replace(/^\/+/, '');
+  for (const base of [ROOT, path.join(ROOT, 'public')]) {     // try root, then public/
+    const p = path.join(base, clean);
+    if (existsSync(p) && statSync(p).isFile()) return p;
+  }
+  return null;
+};
+const server = http.createServer((req, res) => {
+  const file = resolveFile(req.url);
+  if (!file) { res.writeHead(404); return res.end('not found'); }
+  res.setHeader('Content-Type', MIME[path.extname(file).toLowerCase()] || 'application/octet-stream');
+  res.setHeader('Accept-Ranges', 'bytes');
+  createReadStream(file).pipe(res);
+});
+await new Promise((r) => server.listen(0, '127.0.0.1', r));
+const PORT = server.address().port;
+
 // --- record the page playing in real time ---------------------------------
 const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
 const ctx = await browser.newContext({
@@ -58,10 +82,13 @@ const ctx = await browser.newContext({
   recordVideo: { dir: TMP, size: { width: 1600, height: 900 } },
 });
 const page = await ctx.newPage();
-const url = pathToFileURL(path.join(ROOT, HTML)).href + '?clean=1&nocap=1';
+const url = `http://127.0.0.1:${PORT}/${HTML.split(path.sep).join('/')}?clean=1&nocap=1`;
 await page.goto(url, { waitUntil: 'load' });
 await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {});
 await page.waitForFunction(() => typeof window.ANIM_END === 'number');
+// let any <video> footage buffer before we start
+await page.evaluate(() => Promise.all([...document.querySelectorAll('video')].map(v =>
+  v.readyState >= 2 ? 0 : new Promise(r => { v.addEventListener('canplay', r, { once: true }); setTimeout(r, 4000); })))).catch(() => {});
 const END = await page.evaluate(() => window.ANIM_END);
 // restart cleanly from t=0 and let it play through, captured in real time
 await page.evaluate(() => { try { clock = 0; lastTS = 0; playing = true; } catch (e) {} });
@@ -70,6 +97,7 @@ await page.waitForTimeout(Math.ceil(END * 1000) + 400);
 await ctx.close();               // finalizes the .webm
 const webm = await page.video().path().catch(() => null);
 await browser.close();
+server.close();
 const src = webm || path.join(TMP, ''); // playwright names it a hash.webm
 const recFile = webm;
 if (!recFile) { console.error('No video captured.'); process.exit(1); }

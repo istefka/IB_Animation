@@ -4,9 +4,16 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ImpactBuying — Brand Animation (Footage Version)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<style>
+/* Poppins bundled locally so the render and offline use get the exact brand
+   font — no dependency on the Google Fonts CDN (absolute paths because this
+   version is served from a web root). */
+@font-face{font-family:'Poppins';font-weight:400;font-display:block;src:url('/assets/fonts/Poppins-Regular.ttf') format('truetype');}
+@font-face{font-family:'Poppins';font-weight:500;font-display:block;src:url('/assets/fonts/Poppins-Medium.ttf') format('truetype');}
+@font-face{font-family:'Poppins';font-weight:600;font-display:block;src:url('/assets/fonts/Poppins-SemiBold.ttf') format('truetype');}
+@font-face{font-family:'Poppins';font-weight:700;font-display:block;src:url('/assets/fonts/Poppins-Bold.ttf') format('truetype');}
+@font-face{font-family:'Poppins';font-weight:800;font-display:block;src:url('/assets/fonts/Poppins-ExtraBold.ttf') format('truetype');}
+</style>
 <style>
 :root{
   --ink:#052433;--teal:#00818f;--teal-l:#70cbd6;--mint:#e6f4f5;
