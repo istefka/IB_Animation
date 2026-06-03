@@ -82,6 +82,7 @@ const ctx = await browser.newContext({
   recordVideo: { dir: TMP, size: { width: 1600, height: 900 } },
 });
 const page = await ctx.newPage();
+const tFirst = Date.now();        // ~when the recording's first (white) frame is captured
 const url = `http://127.0.0.1:${PORT}/${HTML.split(path.sep).join('/')}?clean=1&nocap=1`;
 await page.goto(url, { waitUntil: 'load' });
 await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {});
@@ -90,13 +91,19 @@ await page.waitForFunction(() => typeof window.ANIM_END === 'number');
 await page.evaluate(() => Promise.all([...document.querySelectorAll('video')].map(v =>
   v.readyState >= 2 ? 0 : new Promise(r => { v.addEventListener('canplay', r, { once: true }); setTimeout(r, 4000); })))).catch(() => {});
 const END = await page.evaluate(() => window.ANIM_END);
-// restart cleanly from t=0 and let it play through, captured in real time
+// hold a clean frame-0 (kills the white default-background flash) before playing
+await page.evaluate(() => { try { playing = false; lastTS = 0; window.renderAt(0); } catch (e) {} });
+await page.waitForTimeout(500);
+// start playback; remember exactly when, so we can trim the lead-in to match the VO
+const tPlay = Date.now();
 await page.evaluate(() => { try { clock = 0; lastTS = 0; playing = true; } catch (e) {} });
 console.log(`  playing ${END.toFixed(1)}s in real time…`);
-await page.waitForTimeout(Math.ceil(END * 1000) + 400);
+await page.waitForTimeout(Math.ceil(END * 1000) + 150);
 await ctx.close();               // finalizes the .webm
 const webm = await page.video().path().catch(() => null);
 await browser.close();
+// seconds of lead-in (white flash + frame-0 hold) before the animation starts
+const LEAD = Math.max(0, (tPlay - tFirst) / 1000);
 server.close();
 const src = webm || path.join(TMP, ''); // playwright names it a hash.webm
 const recFile = webm;
@@ -113,9 +120,12 @@ if (process.env.FFMPEG) ffmpeg = process.env.FFMPEG;
 // format pins yuv420p for universal playback.
 const VF = 'deband=1thr=0.012:2thr=0.012:3thr=0.012:4thr=0.012:range=22:blur=1,format=yuv420p';
 
-const args = ['-y', '-i', recFile];
+// trim the lead-in so the video starts exactly at the animation's first frame
+// (this removes the white flash AND lines the visuals up with the voiceover)
+const args = ['-y', '-ss', LEAD.toFixed(3), '-i', recFile];
 const fc = [`[0:v]${VF}[v]`];
 const maps = ['-map', '[v]'];
+console.log(`  trimming ${LEAD.toFixed(2)}s lead-in`);
 let hasAudio = false;
 if (VO && BGM) {
   args.push('-i', VO, '-i', BGM);
