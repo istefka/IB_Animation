@@ -28,7 +28,7 @@ mkdirSync(FRAMES, { recursive: true });
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1600, height: 900 }, deviceScaleFactor: 1 });
-await page.goto(pathToFileURL(path.join(ROOT, 'index.html')).href + '?clean=1&nocap=0');
+await page.goto(pathToFileURL(path.join(ROOT, 'index.html')).href + '?clean=1&nocap=1');
 await page.waitForFunction(() => typeof window.renderAt === 'function');
 // give fonts a beat to load
 await page.waitForTimeout(600);
@@ -51,9 +51,14 @@ await browser.close();
 
 // find ffmpeg (system, else imageio-ffmpeg if present)
 let ffmpeg = 'ffmpeg';
+const voFile = path.join(ROOT, 'assets', 'AI_Brechtje.mp3');
+const bgmFile = path.join(ROOT, 'public', 'assets', 'jonasblakewood-corporate-background-524146.mp3');
 const args = [
   '-y', '-framerate', String(FPS), '-i', path.join(FRAMES, 'f%05d.png'),
-  '-i', path.join(ROOT, 'assets', 'vo_placeholder.mp3'),
+  '-i', voFile,
+  '-i', bgmFile,
+  '-filter_complex', '[1:a]volume=1.0[vo];[2:a]volume=0.3[bg];[vo][bg]amix=inputs=2:duration=shortest[a]',
+  '-map', '0:v', '-map', '[a]',
   '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '17', '-preset', 'slow',
   '-c:a', 'aac', '-b:a', '192k', '-shortest', OUT,
 ];
