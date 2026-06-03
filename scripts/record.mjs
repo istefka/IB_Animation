@@ -108,10 +108,10 @@ try { ffmpeg = (await import('imageio-ffmpeg')).get_ffmpeg_exe?.() || 'ffmpeg'; 
 // (Python's imageio-ffmpeg binary also works if you set FFMPEG=/path)
 if (process.env.FFMPEG) ffmpeg = process.env.FFMPEG;
 
-// video filter: deband smooths existing bands; noise adds dither so 8-bit
-// H.264 can't re-form them; format pins yuv420p for universal playback.
-const VF = 'deband=1thr=0.015:2thr=0.015:3thr=0.015:4thr=0.015:range=16:blur=1,'
-         + 'noise=alls=3:allf=t,format=yuv420p';
+// video filter: gradconvert smooths gradient banding without adding visible
+// grain. deband only (no temporal noise — that was what looked "noisy").
+// format pins yuv420p for universal playback.
+const VF = 'deband=1thr=0.012:2thr=0.012:3thr=0.012:4thr=0.012:range=22:blur=1,format=yuv420p';
 
 const args = ['-y', '-i', recFile];
 const fc = [`[0:v]${VF}[v]`];
