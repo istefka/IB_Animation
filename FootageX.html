@@ -183,7 +183,7 @@ em{font-style:normal;color:var(--teal-l);}
 body.no-captions .captions{display:none;}
 
 /* crossfade transition overlay */
-.xfade{position:absolute;inset:0;z-index:6;pointer-events:none;background:#000;opacity:0;
+.xfade{position:absolute;inset:0;z-index:6;pointer-events:none;background:#003038;opacity:0;
   transition:opacity 0.4s var(--ease-io);}
 .xfade.active{opacity:0.7;}
 
@@ -209,13 +209,13 @@ body.ui-hidden .hint{opacity:0;pointer-events:none;transition:opacity .3s ease;}
 
   <!-- VIDEO BACKGROUNDS -->
   <div class="vid-bg">
-    <video id="vid1" muted loop playsinline preload="auto">
+    <video id="vid1" muted playsinline preload="auto">
       <source src="/assets/DTS_ABSTRACT_EARTH_Joey_Bania_Clips_ID76.mp4" type="video/mp4">
     </video>
-    <video id="vid2" muted loop playsinline preload="auto">
+    <video id="vid2" muted playsinline preload="auto">
       <source src="/assets/DTS_OFF_GRID_Joey_Bania_Clips_ID410.mp4" type="video/mp4">
     </video>
-    <video id="vid3" muted loop playsinline preload="auto">
+    <video id="vid3" muted playsinline preload="auto">
       <source src="/assets/DTS_MISC_(JOEY_VIDEOS)__Joey_Bania_Clips_ID629.mp4" type="video/mp4">
     </video>
   </div>
@@ -417,17 +417,18 @@ const TIMINGS={duration:40.94,lines:[
   {t0:35.46,t1:40.94,cap:"Together, we create supply chains better \u2014\nbetter for business, people and the planet."},
 ]};
 const END=49.0;
-const CROSSFADES=[15.0,20.2,35.0];
+const CROSSFADES=[2.55,15.0,42.0];
 
 /* Video background scheduling:
-   vid1 (Abstract Earth) = Scene 1 + 2 (0 - 15s)
-   vid2 (Off Grid)       = Bridge + Scene 3 (15 - 35s)
-   vid3 (Misc Joey)      = Scene 4 / Close (35s+)
+   vid1 (Abstract Earth) = Scene 1 (0 - 2.55s)
+   vid2 (Off Grid)       = Scene 2 (2.6 - 15.0s)
+   (no video)            = Bridge + Scene 3 + Scene 4 pillars (15.0 - 42.0s)
+   vid3 (Misc Joey)      = End card (42.0s+)
 */
 const VID_SCHEDULE=[
-  {id:'vid1', start:0,    end:15.0},
-  {id:'vid2', start:15.0, end:35.0},
-  {id:'vid3', start:35.0, end:END},
+  {id:'vid1', start:0,    end:2.55},
+  {id:'vid2', start:2.6,  end:15.0},
+  {id:'vid3', start:42.0, end:END},
 ];
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
