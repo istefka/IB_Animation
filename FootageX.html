@@ -20,7 +20,7 @@ html,body{height:100%;background:#021820;overflow:hidden;font-family:var(--font)
 
 #viewport{position:fixed;inset:0;display:grid;place-items:center;background:#021820;}
 #stage{position:relative;width:1600px;height:900px;overflow:hidden;transform-origin:center;color:#fff;isolation:isolate;
-  background:linear-gradient(160deg,#063039 0%,var(--ink) 50%,#021018 100%);}
+  background:#000;}
 
 /* video backgrounds */
 .vid-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
@@ -184,9 +184,9 @@ em{font-style:normal;color:var(--teal-l);}
 body.no-captions .captions{display:none;}
 
 /* crossfade transition overlay */
-.xfade{position:absolute;inset:0;z-index:6;pointer-events:none;background:var(--ink);opacity:0;
-  transition:opacity 0.5s var(--ease-io);}
-.xfade.active{opacity:1;}
+.xfade{position:absolute;inset:0;z-index:6;pointer-events:none;background:#000;opacity:0;
+  transition:opacity 0.4s var(--ease-io);}
+.xfade.active{opacity:0.7;}
 
 /* UI */
 #ui{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:14px;padding:12px 18px;
@@ -419,7 +419,7 @@ const TIMINGS={duration:40.94,lines:[
   {t0:35.46,t1:40.94,cap:"Together, we create supply chains better \u2014\nbetter for business, people and the planet."},
 ]};
 const END=49.0;
-const CROSSFADES=[2.55,15.0,20.2,35.0];
+const CROSSFADES=[15.0,20.2,35.0];
 
 /* Video background scheduling:
    vid1 (Abstract Earth) = Scene 1 + 2 (0 - 15s)
