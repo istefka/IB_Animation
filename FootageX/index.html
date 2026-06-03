@@ -3,23 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ImpactBuying — Brand Animation v2 (Slide Deck)</title>
+<title>ImpactBuying — Brand Animation (Footage Version)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=block" rel="stylesheet">
 <style>
-/* Poppins bundled locally (assets/fonts) so the render and offline use get the
-   exact brand font — no dependency on the Google Fonts CDN (which renders the
-   wrong fallback font if it can't be reached when frames are captured). */
-@font-face{font-family:'Poppins';font-weight:400;font-display:block;src:url('assets/fonts/Poppins-Regular.ttf') format('truetype');}
-@font-face{font-family:'Poppins';font-weight:500;font-display:block;src:url('assets/fonts/Poppins-Medium.ttf') format('truetype');}
-@font-face{font-family:'Poppins';font-weight:600;font-display:block;src:url('assets/fonts/Poppins-SemiBold.ttf') format('truetype');}
-@font-face{font-family:'Poppins';font-weight:700;font-display:block;src:url('assets/fonts/Poppins-Bold.ttf') format('truetype');}
-@font-face{font-family:'Poppins';font-weight:800;font-display:block;src:url('assets/fonts/Poppins-ExtraBold.ttf') format('truetype');}
-</style>
-<style>
-/* ============================================================
-   ImpactBuying — v2 · slide-deck aesthetic
-   Clean, centered, smooth crossfades, premium typography
-   ============================================================ */
-
 :root{
   --ink:#052433;--teal:#00818f;--teal-l:#70cbd6;--mint:#e6f4f5;
   --teal-950:#003038;--teal-500:#06a9ba;--teal-400:#32b3c8;--teal-300:#70cbd6;--teal-200:#a8e2e9;--teal-100:#d8f3f6;
@@ -32,26 +20,17 @@ html,body{height:100%;background:#021820;overflow:hidden;font-family:var(--font)
 
 #viewport{position:fixed;inset:0;display:grid;place-items:center;background:#021820;}
 #stage{position:relative;width:1600px;height:900px;overflow:hidden;transform-origin:center;color:#fff;isolation:isolate;
-  background:linear-gradient(160deg,#063039 0%,var(--ink) 50%,#021018 100%);}
+  background:#003038;}
 
-/* ambient background */
-.bg-glow{position:absolute;inset:0;z-index:0;pointer-events:none;}
-.bg-glow::before{content:'';position:absolute;width:900px;height:900px;top:-200px;right:-100px;
-  background:radial-gradient(circle,rgba(0,129,143,.18) 0%,transparent 60%);animation:drift1 20s ease-in-out infinite alternate;}
-.bg-glow::after{content:'';position:absolute;width:700px;height:700px;bottom:-100px;left:-50px;
-  background:radial-gradient(circle,rgba(6,169,186,.12) 0%,transparent 60%);animation:drift2 18s ease-in-out infinite alternate;}
-@keyframes drift1{from{transform:translate(0,0) scale(1)}to{transform:translate(-40px,30px) scale(1.1)}}
-@keyframes drift2{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,-20px) scale(1.05)}}
+/* video backgrounds */
+.vid-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.vid-bg video{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s var(--ease-io);}
+.vid-bg video.active{opacity:1;}
+.vid-bg::after{content:'';position:absolute;inset:0;background:rgba(2,24,32,.55);pointer-events:none;}
 
 /* vignette */
 .vig{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse 110% 90% at 50% 50%,transparent 55%,rgba(2,16,24,.55) 100%);}
-
-/* anti-banding grain — a faint noise tile that dithers the gradient so it
-   doesn't band/stair when compressed to video. Invisible to the eye. */
-.grain{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='180'%20height='180'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size:180px 180px;}
+  box-shadow:inset 0 0 180px 60px rgba(2,16,24,.55);}
 
 /* progress bar */
 .topbar{position:absolute;left:0;top:0;height:2px;width:0;z-index:10;background:var(--teal-l);opacity:.7;}
@@ -91,18 +70,18 @@ em{font-style:normal;color:var(--teal-l);}
 /* ============ SCENE 1 — HOOK ============ */
 #s1{flex-direction:column;padding:0 200px;align-items:flex-start;}
 .s1-headline{font-weight:700;font-size:96px;line-height:1.06;letter-spacing:-.025em;max-width:1100px;}
-.s1-headline .glow{background:linear-gradient(100deg,#a8e2e9,#32b3c8 40%,#0594a3 60%,#a8e2e9);
-  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  animation:none;}
-.s1-headline .glow.shown{animation:grad-shift 2.8s var(--ease) forwards;}
-@keyframes grad-shift{0%{background-position:100% 0}100%{background-position:0% 0}}
+.s1-headline .glow{color:var(--teal-400);}
+.s1-headline .glow.shown{opacity:1;}
+@keyframes grad-shift{0%{opacity:0}100%{opacity:1}}
 
 /* ============ SCENE 2 — PRESSURE ============ */
 #s2{flex-direction:column;padding:0 140px;align-items:flex-start;}
 .s2-cards{display:flex;gap:36px;width:100%;margin-top:40px;}
 .s2-card{flex:1;padding:44px 38px;border-radius:18px;
-  background:linear-gradient(155deg,rgba(0,79,93,.35),rgba(5,36,51,.3));
-  border:1px solid rgba(112,203,214,.15);box-shadow:0 30px 80px rgba(0,8,12,.4);}
+  background:rgba(3,48,56,.6);
+  border:1px solid rgba(112,203,214,.15);box-shadow:0 30px 80px rgba(0,8,12,.4);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  will-change:transform,opacity;}
 .s2-card .num{font-weight:600;font-size:20px;color:var(--teal-l);letter-spacing:.06em;margin-bottom:18px;}
 .s2-card .icon{width:72px;height:72px;border-radius:16px;display:grid;place-items:center;background:var(--mint);margin-bottom:24px;}
 .s2-card .icon svg{width:36px;height:36px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
@@ -183,7 +162,7 @@ em{font-style:normal;color:var(--teal-l);}
   transform:translateY(101%) scaleY(0.6);opacity:0;transition:transform 1.4s cubic-bezier(.22,1,.36,1),opacity .8s ease-out;}
 .envelope.shown{transform:translateY(0) scaleY(1);opacity:1;}
 .envelope svg{width:100%;height:100%;display:block;}
-.envelope.white svg path[fill="url(#envg)"]{fill:#ffffff;}
+.envelope.white svg path[fill="#046e7a"]{fill:#ffffff;}
 .envelope-white{position:absolute;left:0;right:0;bottom:0;height:320px;z-index:5;pointer-events:none;
   transform:translateY(101%) scaleY(0.6);opacity:0;transition:transform 1.4s cubic-bezier(.22,1,.36,1),opacity .8s ease-out;}
 .envelope-white.shown{transform:translateY(0) scaleY(1);opacity:1;}
@@ -204,13 +183,13 @@ em{font-style:normal;color:var(--teal-l);}
 body.no-captions .captions{display:none;}
 
 /* crossfade transition overlay */
-.xfade{position:absolute;inset:0;z-index:6;pointer-events:none;background:var(--ink);opacity:0;
-  transition:opacity 0.5s var(--ease-io);}
-.xfade.active{opacity:1;}
+.xfade{position:absolute;inset:0;z-index:6;pointer-events:none;background:#003038;opacity:0;
+  transition:opacity 0.4s var(--ease-io);}
+.xfade.active{opacity:0.7;}
 
 /* UI */
 #ui{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:14px;padding:12px 18px;
-  background:linear-gradient(0deg,rgba(2,12,18,.9),transparent);font-family:var(--font);color:#cfeff3;font-size:13px;}
+  background:rgba(2,12,18,.92);font-family:var(--font);color:#cfeff3;font-size:13px;}
 #ui button{font-family:var(--font);background:rgba(0,129,143,.2);color:#d8f3f6;border:1px solid rgba(112,203,214,.3);
   padding:7px 14px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px;}
 #ui button:hover{background:rgba(0,129,143,.38);}
@@ -228,11 +207,22 @@ body.ui-hidden .hint{opacity:0;pointer-events:none;transition:opacity .3s ease;}
 <body>
 <div id="viewport"><div id="stage">
 
-  <div class="bg-glow"></div>
+  <!-- VIDEO BACKGROUNDS -->
+  <div class="vid-bg">
+    <video id="vid1" muted playsinline preload="auto" loop>
+      <source src="/assets/DTS_ABSTRACT_EARTH_Joey_Bania_Clips_ID76.mp4" type="video/mp4">
+    </video>
+    <video id="vid2" muted playsinline preload="auto" loop>
+      <source src="/assets/DTS_OFF_GRID_Joey_Bania_Clips_ID410.mp4" type="video/mp4">
+    </video>
+    <video id="vid3" muted playsinline preload="auto" loop>
+      <source src="/assets/DTS_MISC_(JOEY_VIDEOS)__Joey_Bania_Clips_ID629.mp4" type="video/mp4">
+    </video>
+  </div>
+
   <div class="vig"></div>
-  <div class="grain"></div>
   <div class="topbar" id="topbar"></div>
-  <div class="chrome"><img src="assets/logo.svg" alt="ImpactBuying"></div>
+  <div class="chrome"><img src="/assets/logo.svg" alt="ImpactBuying"></div>
 
   <!-- ============ SCENE 1 — HOOK ============ -->
   <section class="slide" id="s1" data-in="0" data-out="2.55">
@@ -277,7 +267,7 @@ body.ui-hidden .hint{opacity:0;pointer-events:none;transition:opacity .3s ease;}
       </div>
       <p class="bridge-sub r d3" data-in="17.0">We turn supply-chain complexity into decisions you can trust.</p>
     </div>
-    <img class="bridge-img r sfr" data-in="15.5" src="./photo-thing.png" alt=""/>
+    <img class="bridge-img r sfr" data-in="15.5" src="/photo-thing.png" alt=""/>
   </section>
 
   <!-- ============ SCENE 3 — SOLUTION ============ -->
@@ -334,9 +324,9 @@ body.ui-hidden .hint{opacity:0;pointer-events:none;transition:opacity .3s ease;}
       </div>
     </div>
     <div class="endcard">
-      <div class="logo-wrap r sc" data-in="42.0"><span class="logo" data-logo data-size="54"></span></div>
-      <div class="desc r d1" data-in="42.5"><em>Decision Intelligence</em> Provider</div>
-      <div class="url r d2" data-in="43.0">www.impactbuying.com</div>
+      <div class="logo-wrap r sc" data-in="41.5"><span class="logo" data-logo data-size="54"></span></div>
+      <div class="desc r d1" data-in="42.0"><em>Decision Intelligence</em> Provider</div>
+      <div class="url r d2" data-in="42.5">www.impactbuying.com</div>
     </div>
   </section>
 
@@ -391,8 +381,7 @@ body.ui-hidden .hint{opacity:0;pointer-events:none;transition:opacity .3s ease;}
 
   <div class="envelope" id="envelope">
     <svg viewBox="0 0 1600 220" preserveAspectRatio="none">
-      <defs><linearGradient id="envg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0594a3"/><stop offset="1" stop-color="#003038"/></linearGradient></defs>
-      <path d="M0 0 L689 110 C750 120 850 120 911 110 L1600 0 V220 H0 Z" fill="url(#envg)"/>
+      <path d="M0 0 L689 110 C750 120 850 120 911 110 L1600 0 V220 H0 Z" fill="#046e7a"/>
       <path d="M0 0 L689 110 C750 120 850 120 911 110 L1600 0" fill="none" stroke="#70cbd6" stroke-width="1.5" opacity=".4"/>
     </svg>
   </div>
@@ -420,15 +409,27 @@ const TIMINGS={duration:40.94,lines:[
   {t0:0.09,t1:2.30, cap:"The rules of global trade are changing."},
   {t0:2.69,t1:4.84, cap:"Consumers demand transparency,"},
   {t0:5.57,t1:9.11, cap:"governments are introducing stricter ESG legislation,"},
-  {t0:9.59,t1:15.76,cap:"and businesses are expected to prove where products come from\nand how they impact people and the planet."},
+  {t0:9.59,t1:15.76,cap:"and businesses are expected to prove where products come from and how they impact people and the planet."},
   {t0:16.40,t1:19.80,cap:"At Impact Buying, we\u2019re a decision-intelligence provider."},
-  {t0:20.39,t1:26.14,cap:"We help businesses transform complex supply chains\ninto opportunities for positive impact,"},
+  {t0:20.39,t1:26.14,cap:"We help businesses transform complex supply chains into opportunities for positive impact,"},
   {t0:26.71,t1:29.72,cap:"using smart technology and ESG expertise."},
-  {t0:29.98,t1:34.88,cap:"We uncover risks, improve transparency,\nand support responsible sourcing."},
-  {t0:35.46,t1:40.94,cap:"Together, we create supply chains better \u2014\nbetter for business, people and the planet."},
+  {t0:29.98,t1:34.88,cap:"We uncover risks, improve transparency, and support responsible sourcing."},
+  {t0:35.46,t1:40.94,cap:"Together, we create supply chains better \u2014 better for business, people and the planet."},
 ]};
 const END=49.0;
-const CROSSFADES=[2.55,15.0,20.2,35.0];
+const CROSSFADES=[2.55,15.0,35.1];
+
+/* Video background scheduling:
+   vid1 (Abstract Earth) = Scene 1 (0 - 2.55s)
+   vid2 (Off Grid)       = Scene 2 (2.6 - 15.0s)
+   (no video)            = Bridge + Scene 3 (15.0 - 35.1s)
+   vid3 (Misc Joey)      = Scene 4 + End card (35.1s+)
+*/
+const VID_SCHEDULE=[
+  {id:'vid1', start:0,    end:2.55},
+  {id:'vid2', start:2.6,  end:15.0},
+  {id:'vid3', start:35.1, end:END},
+];
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const stage=$('#stage'),vo=$('#vo'),bgm=$('#bgm'),capEl=$('#cap'),xfadeEl=$('#xfade'),envelope=$('#envelope'),
@@ -436,9 +437,24 @@ const stage=$('#stage'),vo=$('#vo'),bgm=$('#bgm'),capEl=$('#cap'),xfadeEl=$('#xf
 bgm.volume=0.15;
 const slides=$$('.slide'),reveals=$$('[data-in]').filter(e=>!e.classList.contains('slide'));
 
+const vidEls=VID_SCHEDULE.map(v=>document.getElementById(v.id));
+const vidWasActive=vidEls.map(()=>false);
+
+function updateVideoBg(now){
+  VID_SCHEDULE.forEach((sch,i)=>{
+    const active=now>=sch.start&&now<sch.end;
+    if(active&&!vidWasActive[i]){
+      try{vidEls[i].currentTime=0;}catch(e){}
+      vidEls[i].play().catch(()=>{});
+    }
+    vidWasActive[i]=active;
+    vidEls[i].classList.toggle('active',active);
+  });
+}
+
 function buildLogo(el){const h=+(el.dataset.size||60);el.classList.add('logo');
   const chromeImg=document.querySelector('.chrome img');
-  const logoSrc=chromeImg?chromeImg.src:'assets/logo.svg';
+  const logoSrc=chromeImg?chromeImg.src:'/assets/logo.svg';
   el.innerHTML=`<img class="logo-img" src="${logoSrc}" alt="ImpactBuying" style="height:${h}px">`;}
 $$('[data-logo]').forEach(buildLogo);
 
@@ -483,7 +499,6 @@ const VIZ=(()=>{
     defs.innerHTML=`<filter id="softGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
     svg.appendChild(defs);
 
-    // Proper circle element (visible during cycle phase)
     circleEl=document.createElementNS(NS,'circle');
     circleEl.setAttribute('cx',cx);circleEl.setAttribute('cy',cy);circleEl.setAttribute('r',cr);
     circleEl.setAttribute('fill','none');circleEl.setAttribute('stroke','rgba(112,203,214,.4)');
@@ -491,14 +506,12 @@ const VIZ=(()=>{
     circleEl.style.opacity='0';circleEl.style.transition='opacity .8s var(--ease-io)';
     svg.appendChild(circleEl);
 
-    // Chain path
     let d=buildChainD(1);
     pathEl=document.createElementNS(NS,'path');pathEl.setAttribute('d',d);pathEl.setAttribute('fill','none');
     pathEl.setAttribute('stroke','rgba(112,203,214,.3)');pathEl.setAttribute('stroke-width','2');
     pathEl.setAttribute('stroke-linecap','round');svg.appendChild(pathEl);
     L=pathEl.getTotalLength();pathEl.style.strokeDasharray=L;pathEl.style.strokeDashoffset=L;
 
-    // Segment paths for highlighting
     for(let i=0;i<nodes.length-1;i++){
       const a=chainPos[i],b=chainPos[i+1],mx=(a.x+b.x)/2;
       const seg=document.createElementNS(NS,'path');
@@ -509,7 +522,6 @@ const VIZ=(()=>{
       seg.id=`seg${i}`;svg.appendChild(seg);
     }
 
-    // Pulse dots (travel around the circle during cycle phase)
     for(let i=0;i<3;i++){
       const dot=document.createElementNS(NS,'circle');
       dot.setAttribute('r','4');dot.setAttribute('fill','rgba(112,203,214,.8)');
@@ -517,7 +529,6 @@ const VIZ=(()=>{
       svg.appendChild(dot);pulseEls.push(dot);
     }
 
-    // Nodes
     nodes.forEach((n,i)=>{
       const g=document.createElementNS(NS,'g');g.setAttribute('class','node');
       g.setAttribute('transform',`translate(${circlePos[i].x.toFixed(1)} ${circlePos[i].y.toFixed(1)})`);
@@ -534,23 +545,19 @@ const VIZ=(()=>{
     const active=now>=20.3&&now<35.0;svg.style.opacity=active?1:0;
     if(!active){pulseEls.forEach(p=>p.style.opacity='0');circleEl.style.opacity='0';return;}
 
-    // morphT: 0 = circle, 1 = chain
     const morphStart=28.0,morphEnd=29.8;
     let rawT=1;
     if(now<morphStart)rawT=0;
     else if(now<morphEnd)rawT=(now-morphStart)/(morphEnd-morphStart);
     const morphT=easeInOutCubic(Math.max(0,Math.min(1,rawT)));
 
-    // Update node positions smoothly
     nodes.forEach((n,i)=>{
       const pos=getNodePos(i,morphT);
       if(n.g)n.g.setAttribute('transform',`translate(${pos.x.toFixed(1)} ${pos.y.toFixed(1)})`);
     });
 
-    // Circle visibility — hide once morph starts
     circleEl.style.opacity=now<28.0?'1':'0';
 
-    // Chain path — fade in as morph progresses
     if(morphT>0.3){
       pathEl.setAttribute('d',buildChainD(morphT));
       pathEl.style.strokeDashoffset='0';
@@ -563,7 +570,6 @@ const VIZ=(()=>{
       pathEl.style.opacity='0';
     }
 
-    // Pulse dots orbit the circle
     if(morphT<0.5){
       const elapsed=now-20.3;
       pulseEls.forEach((dot,i)=>{
@@ -576,11 +582,9 @@ const VIZ=(()=>{
       pulseEls.forEach(p=>p.style.opacity='0');
     }
 
-    // Nodes appear with stagger
     nodes.forEach((n,i)=>{const on=now>=21.0+i*0.4;
       n.g.style.opacity=on?1:0;});
 
-    // Capability highlights (only after morph complete)
     hot(1,now>=30.2&&now<31.6);
     seg(0,now>=30.2&&now<31.6);
     hot(2,now>=31.8&&now<33.1);
@@ -606,6 +610,7 @@ VIZ.build();
    ============================================================ */
 let prevXfade=-1;
 function setStateAt(now){
+  updateVideoBg(now);
   for(const s of slides){const a=+s.dataset.in,b=+s.dataset.out;s.classList.remove('is-pre','is-in','is-out');
     s.classList.add(now<a?'is-pre':now<b?'is-in':'is-out');}
   for(const r of reveals){const a=+r.dataset.in,b=r.dataset.out!==undefined?+r.dataset.out:Infinity;
@@ -645,7 +650,6 @@ function loop(ts){
     if(!vo.error&&!isNaN(vo.duration)&&clock<=vo.duration){
       if(Math.abs(vo.currentTime-clock)>0.25){try{vo.currentTime=clock;}catch(e){}}
     }
-    // Fade out background music in the last 3 seconds
     if(clock>=46.0){const fade=Math.max(0,1-(clock-46.0)/3.0);bgm.volume=0.15*fade;}
     else{bgm.volume=0.15;}
     if(clock>=END){restart();}
@@ -656,9 +660,15 @@ function loop(ts){
 requestAnimationFrame(loop);
 
 const btnPlay=$('#btnPlay');
-function play(){playing=true;btnPlay.textContent='Pause';lastTS=0;vo.play().catch(()=>{});bgm.play().catch(()=>{});}
+function play(){
+  playing=true;btnPlay.textContent='Pause';lastTS=0;
+  vo.play().catch(()=>{});bgm.play().catch(()=>{});
+  vidEls.forEach(v=>{v.play().catch(()=>{});});
+}
 function pause(){playing=false;btnPlay.textContent='Play';vo.pause();bgm.pause();}
-function restart(){clock=0;VIZ.reset();prevXfade=-1;try{vo.currentTime=0;}catch(e){}try{bgm.currentTime=0;}catch(e){}if(playing){vo.play().catch(()=>{});bgm.play().catch(()=>{});}setStateAt(0);}
+function restart(){clock=0;VIZ.reset();prevXfade=-1;try{vo.currentTime=0;}catch(e){}try{bgm.currentTime=0;}catch(e){}
+  vidEls.forEach(v=>{try{v.currentTime=0;}catch(e){}});
+  if(playing){vo.play().catch(()=>{});bgm.play().catch(()=>{});}setStateAt(0);}
 function seek(t){clock=t;try{vo.currentTime=t;}catch(e){}setStateAt(t);}
 
 btnPlay.onclick=()=>playing?pause():play();
