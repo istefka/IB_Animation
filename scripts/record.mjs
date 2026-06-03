@@ -128,12 +128,13 @@ const maps = ['-map', '[v]'];
 console.log(`  trimming ${LEAD.toFixed(2)}s lead-in`);
 let hasAudio = false;
 if (VO && BGM) {
-  args.push('-i', VO, '-i', BGM);
-  fc.push('[1:a]volume=1.0[vo]', '[2:a]volume=0.28[bg]', '[vo][bg]amix=inputs=2:duration=first[a]');
+  args.push('-i', VO, '-stream_loop', '-1', '-i', BGM);   // loop music to fill the tail
+  fc.push('[1:a]volume=1.0[vo]', '[2:a]volume=0.28[bg]',
+          '[vo][bg]amix=inputs=2:duration=longest:dropout_transition=0:normalize=0,apad[a]');
   maps.push('-map', '[a]'); hasAudio = true;
 } else if (VO) {
   args.push('-i', VO);
-  fc.push('[1:a]volume=1.0[a]');
+  fc.push('[1:a]volume=1.0,apad[a]');                       // pad VO with silence to full length
   maps.push('-map', '[a]'); hasAudio = true;
 }
 args.push(
@@ -143,7 +144,7 @@ args.push(
   '-x264-params', 'aq-mode=3:aq-strength=1.0',
   '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
   ...(hasAudio ? ['-c:a', 'aac', '-b:a', '192k'] : ['-an']),
-  '-shortest', OUT,
+  '-t', END.toFixed(3), OUT,                                // full animation length, not the VO length
 );
 console.log('Encoding (de-band + dither)…');
 const r = spawnSync(ffmpeg, args, { stdio: 'inherit' });
