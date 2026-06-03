@@ -6,7 +6,7 @@
  *   node scripts/record.mjs
  *
  * It captures frame-by-frame at 60fps for buttery-smooth, deterministic
- * output, then muxes in the placeholder voiceover. Output: build/impactbuying.mp4
+ * output, then muxes in the voiceover + background music. Output: build/impactbuying.mp4
  *
  * (If you'd rather just screen-record: open index.html?clean=1&auto=1 in a
  *  browser at 1600×900 and use OBS / QuickTime / your OS recorder.)
