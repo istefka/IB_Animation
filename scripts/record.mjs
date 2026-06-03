@@ -30,7 +30,7 @@ const NAME = HTML.replace(/\.html?$/i, '').replace(/[\\/]+/g, '-');
 const OUT = path.join(ROOT, 'build', `${NAME}.mp4`);
 const TMP = path.join(ROOT, 'build', '_rec');
 const FRAMES = path.join(TMP, 'frames');
-const FPS = 30;
+const FPS = 60;
 
 // --- audio tracks referenced by the page (<audio id="vo"/"bgm" src="...">) ---
 const html = readFileSync(path.join(ROOT, HTML), 'utf8');
@@ -90,6 +90,10 @@ await page.evaluate(async () => {
   await document.fonts.ready;
 });
 await page.waitForFunction(() => typeof window.ANIM_END === 'number');
+// pause the expensive animated background glow during capture so the page can
+// paint faster -> higher, steadier capture fps -> smoother motion (esp. the
+// ticker). The drift is a barely-perceptible ambient effect; freezing it is fine.
+await page.addStyleTag({ content: '.bg-glow::before,.bg-glow::after{animation:none!important}' }).catch(() => {});
 await page.evaluate(() => Promise.all([...document.querySelectorAll('video')].map(v =>
   v.readyState >= 2 ? 0 : new Promise(r => { v.addEventListener('canplay', r, { once: true }); setTimeout(r, 5000); })))).catch(() => {});
 const END = await page.evaluate(() => window.ANIM_END);
@@ -103,11 +107,14 @@ cdp.on('Page.screencastFrame', (ev) => {
   cdp.send('Page.screencastFrameAck', { sessionId: ev.sessionId }).catch(() => {});
   const ts = ev.metadata.timestamp;
   if (t0 === null) t0 = ts;
-  const file = path.join(FRAMES, `f${String(fi++).padStart(6, '0')}.png`);
+  const file = path.join(FRAMES, `f${String(fi++).padStart(6, '0')}.jpg`);
   writeFileSync(file, Buffer.from(ev.data, 'base64'));
   frames.push({ rel: ts - t0, file });
 });
-await cdp.send('Page.startScreencast', { format: 'png', everyNthFrame: 1 });
+// JPEG (high quality) screencast is much faster to encode/transfer than PNG,
+// so we capture a higher, steadier frame rate -> smoother motion (the ticker).
+// Any slight JPEG softness on the gradient is cleaned up by the deband encode.
+await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 95, everyNthFrame: 1 });
 // real-time driver: clock = true elapsed wall-time (uncapped), so the schedule is right
 await page.evaluate((end) => {
   try { playing = false; } catch (e) {}
