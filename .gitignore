@@ -3,4 +3,3 @@ build/
 scripts/_audio_build/
 node_modules/
 *.log
-.env

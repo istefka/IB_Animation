@@ -1,14 +1,16 @@
 {
-  "source": "voiceover.mp3 (real VO, ~37.1s) — boundaries derived via silence detection",
-  "duration": 37.12,
-  "endHold": 42.0,
+  "source": "AI_Brechtje.mp3 — boundaries derived via silence detection",
+  "duration": 40.94,
+  "endHold": 46.0,
   "lines": [
-    {"scene": 1, "start": 0.5,  "end": 2.7,  "caption": "The rules of global trade are changing."},
-    {"scene": 2, "start": 3.1,  "end": 5.0,  "caption": "Consumers demand transparency."},
-    {"scene": 2, "start": 5.4,  "end": 8.4,  "caption": "Governments are introducing stricter ESG legislation."},
-    {"scene": 2, "start": 8.4,  "end": 17.9, "caption": "And businesses are expected to prove where products come from and how they impact people and the planet."},
-    {"scene": 3, "start": 18.3, "end": 23.3, "caption": "At ImpactBuying, we help businesses transform complex supply chains into opportunities for positive impact."},
-    {"scene": 3, "start": 23.9, "end": 32.0, "caption": "Using smart supply chain intelligence and ESG expertise, we uncover risks, improve transparency, and support responsible sourcing."},
-    {"scene": 4, "start": 32.4, "end": 37.0, "caption": "Together, we create supply chains that are better for business, people, and the planet."}
+    {"scene": 1, "start": 0.09,  "end": 2.30,  "caption": "The rules of global trade are changing."},
+    {"scene": 2, "start": 2.69,  "end": 4.84,  "caption": "Consumers demand transparency,"},
+    {"scene": 2, "start": 5.57,  "end": 9.11,  "caption": "governments are introducing stricter ESG legislation,"},
+    {"scene": 2, "start": 9.59,  "end": 15.76, "caption": "and businesses are expected to prove where products come from and how they impact people and the planet."},
+    {"scene": 3, "start": 16.40, "end": 19.80, "caption": "At Impact Buying, we're a decision-intelligence provider."},
+    {"scene": 3, "start": 20.39, "end": 26.14, "caption": "We help businesses transform complex supply chains into opportunities for positive impact,"},
+    {"scene": 3, "start": 26.71, "end": 29.72, "caption": "using smart technology and ESG expertise."},
+    {"scene": 3, "start": 29.98, "end": 34.88, "caption": "We uncover risks, improve transparency, and support responsible sourcing."},
+    {"scene": 4, "start": 35.46, "end": 40.94, "caption": "Together, we create supply chains better — better for business, people and the planet."}
   ]
 }
