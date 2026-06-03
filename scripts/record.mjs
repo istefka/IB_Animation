@@ -3,42 +3,42 @@
  *
  *   npm install
  *   npx playwright install chromium
- *   node scripts/record.mjs               # renders index.html
- *   node scripts/record.mjs FootageX.html  # renders another version
+ *   node scripts/record.mjs                 # renders index.html
+ *   node scripts/record.mjs FootageX/index.html
  *
- * WHY THIS APPROACH:
- * The animation's motion (slide cross-fades, the `.r` reveals, the drifting
- * background glow) is driven by CSS transitions/@keyframes that run on the
- * browser's own clock. Stepping `renderAt(t)` frame-by-frame flips the state
- * classes but does NOT advance those CSS transitions, so a stepped render does
- * not match what you see when it plays. So we record it PLAYING IN REAL TIME —
- * the captured frames are exactly the browser's output — then re-encode to a
- * high-quality MP4 with de-banding + dithering so the teal gradients don't
- * stair-step ("banding"), which is what wrecks screen recordings.
+ * HOW IT WORKS:
+ * The motion is driven by CSS transitions/@keyframes, so we let the page PLAY
+ * (real browser output) and grab frames via CDP screencast — each frame carries
+ * a real timestamp. We then assemble the frames on that real timeline, so the
+ * result is perfectly in sync with the voiceover regardless of how fast/slow the
+ * machine could render (recordVideo, by contrast, stretches time under load).
+ * Fonts are preloaded; gradients are de-banded; output is the full ANIM_END.
  *
  * Output: build/<name>.mp4
  */
 import { chromium } from 'playwright';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, rmSync, readFileSync, existsSync, createReadStream, statSync } from 'node:fs';
+import { mkdirSync, rmSync, readFileSync, writeFileSync, existsSync, createReadStream, statSync } from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dir, '..');
 const HTML = process.argv[2] || 'index.html';
-const NAME = HTML.replace(/\.html?$/i, '').replace(/[\\/]+/g, '-'); // FootageX/index.html -> FootageX-index
+const NAME = HTML.replace(/\.html?$/i, '').replace(/[\\/]+/g, '-');
 const OUT = path.join(ROOT, 'build', `${NAME}.mp4`);
 const TMP = path.join(ROOT, 'build', '_rec');
+const FRAMES = path.join(TMP, 'frames');
+const FPS = 30;
 
-// --- find the audio tracks the page references (<audio id="vo"/"bgm" src="...">)
+// --- audio tracks referenced by the page (<audio id="vo"/"bgm" src="...">) ---
 const html = readFileSync(path.join(ROOT, HTML), 'utf8');
 const srcOf = (id) => {
   const m = html.match(new RegExp(`<audio[^>]*id=["']${id}["'][^>]*src=["']([^"']+)["']`, 'i'));
   if (!m) return null;
-  const rel = m[1].replace(/^\//, '');            // "/assets/x.mp3" -> "assets/x.mp3"
-  for (const base of [ROOT, path.join(ROOT, 'public')]) {   // check root AND public/
+  const rel = m[1].replace(/^\//, '');
+  for (const base of [ROOT, path.join(ROOT, 'public')]) {
     const p = path.join(base, rel);
     if (existsSync(p)) return p;
   }
@@ -51,17 +51,16 @@ console.log(`  voiceover: ${VO || '(none found)'}`);
 console.log(`  music:     ${BGM || '(none)'}`);
 
 rmSync(TMP, { recursive: true, force: true });
-mkdirSync(TMP, { recursive: true });
+mkdirSync(FRAMES, { recursive: true });
 mkdirSync(path.join(ROOT, 'build'), { recursive: true });
 
-// --- tiny static server so absolute "/assets/..." paths resolve (the footage
-//     version uses them, and <video> needs a real server, not file://) -------
+// --- static server so absolute "/assets/..." paths + <video> resolve ---------
 const MIME = { '.html':'text/html', '.js':'text/javascript', '.css':'text/css',
   '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.mp4':'video/mp4',
   '.mp3':'audio/mpeg', '.ttf':'font/ttf', '.woff2':'font/woff2', '.json':'application/json' };
 const resolveFile = (urlPath) => {
   const clean = decodeURIComponent(urlPath.split('?')[0]).replace(/^\/+/, '');
-  for (const base of [ROOT, path.join(ROOT, 'public')]) {     // try root, then public/
+  for (const base of [ROOT, path.join(ROOT, 'public')]) {
     const p = path.join(base, clean);
     if (existsSync(p) && statSync(p).isFile()) return p;
   }
@@ -77,80 +76,85 @@ const server = http.createServer((req, res) => {
 await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const PORT = server.address().port;
 
-// --- record the page playing in real time ---------------------------------
+// --- launch + load ------------------------------------------------------------
 const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
-const ctx = await browser.newContext({
-  viewport: { width: 1600, height: 900 },
-  deviceScaleFactor: 1,
-  recordVideo: { dir: TMP, size: { width: 1600, height: 900 } },
-});
+const ctx = await browser.newContext({ viewport: { width: 1600, height: 900 }, deviceScaleFactor: 1 });
 const page = await ctx.newPage();
-const tFirst = Date.now();        // ~when the recording's first (white) frame is captured
+const cdp = await ctx.newCDPSession(page);
 const url = `http://127.0.0.1:${PORT}/${HTML.split(path.sep).join('/')}?clean=1&nocap=1`;
 await page.goto(url, { waitUntil: 'load' });
-await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {});
+// preload EVERY Poppins weight so no text falls back to a system font mid-render
+await page.evaluate(async () => {
+  if (!document.fonts) return;
+  try { await Promise.all([400, 500, 600, 700, 800].map(w => document.fonts.load(`${w} 40px Poppins`))); } catch (e) {}
+  await document.fonts.ready;
+});
 await page.waitForFunction(() => typeof window.ANIM_END === 'number');
-// let any <video> footage buffer before we start
 await page.evaluate(() => Promise.all([...document.querySelectorAll('video')].map(v =>
-  v.readyState >= 2 ? 0 : new Promise(r => { v.addEventListener('canplay', r, { once: true }); setTimeout(r, 4000); })))).catch(() => {});
+  v.readyState >= 2 ? 0 : new Promise(r => { v.addEventListener('canplay', r, { once: true }); setTimeout(r, 5000); })))).catch(() => {});
 const END = await page.evaluate(() => window.ANIM_END);
-// hold a clean frame-0 (kills the white default-background flash) before playing
-await page.evaluate(() => { try { playing = false; lastTS = 0; window.renderAt(0); } catch (e) {} });
-await page.waitForTimeout(500);
-// start playback; remember exactly when, so we can trim the lead-in to match the VO.
-// Drive the clock off TRUE elapsed wall-time (uncapped) instead of the page's own
-// rAF loop — the page caps per-frame dt at 0.1s, so under slow headless rendering
-// its clock falls behind wall-time and the captured content lags the schedule
-// (e.g. the ticker barely appears). recordVideo timestamps by wall-time, so
-// clock == wall-time keeps every frame on schedule.
-const tPlay = Date.now();
+await page.evaluate(() => { try { playing = false; } catch (e) {} window.renderAt(0); });
+await page.waitForTimeout(200);
+
+// --- capture frames via screencast (each frame has a real timestamp) ----------
+const frames = [];
+let fi = 0, t0 = null;
+cdp.on('Page.screencastFrame', (ev) => {
+  cdp.send('Page.screencastFrameAck', { sessionId: ev.sessionId }).catch(() => {});
+  const ts = ev.metadata.timestamp;
+  if (t0 === null) t0 = ts;
+  const file = path.join(FRAMES, `f${String(fi++).padStart(6, '0')}.png`);
+  writeFileSync(file, Buffer.from(ev.data, 'base64'));
+  frames.push({ rel: ts - t0, file });
+});
+await cdp.send('Page.startScreencast', { format: 'png', everyNthFrame: 1 });
+// real-time driver: clock = true elapsed wall-time (uncapped), so the schedule is right
 await page.evaluate((end) => {
   try { playing = false; } catch (e) {}
-  const t0 = performance.now();
+  const s = performance.now();
   (function tick() {
-    const t = (performance.now() - t0) / 1000;
+    const t = (performance.now() - s) / 1000;
     window.renderAt(Math.min(t, end));
-    if (t < end + 0.2) requestAnimationFrame(tick);
+    if (t < end) requestAnimationFrame(tick);
   })();
 }, END);
-console.log(`  playing ${END.toFixed(1)}s in real time…`);
-await page.waitForTimeout(Math.ceil(END * 1000) + 150);
-await ctx.close();               // finalizes the .webm
-const webm = await page.video().path().catch(() => null);
+console.log(`  capturing ${END.toFixed(1)}s …`);
+await page.waitForTimeout(Math.ceil(END * 1000) + 250);
+await cdp.send('Page.stopScreencast').catch(() => {});
+await page.waitForTimeout(150);
 await browser.close();
-// seconds of lead-in (white flash + frame-0 hold) before the animation starts
-const LEAD = Math.max(0, (tPlay - tFirst) / 1000);
 server.close();
-const src = webm || path.join(TMP, ''); // playwright names it a hash.webm
-const recFile = webm;
-if (!recFile) { console.error('No video captured.'); process.exit(1); }
 
-// --- re-encode: de-band + subtle dither + high quality, mux audio ----------
-let ffmpeg = 'ffmpeg';
-try { ffmpeg = (await import('imageio-ffmpeg')).get_ffmpeg_exe?.() || 'ffmpeg'; } catch {}
-// (Python's imageio-ffmpeg binary also works if you set FFMPEG=/path)
-if (process.env.FFMPEG) ffmpeg = process.env.FFMPEG;
+if (!frames.length) { console.error('No frames captured.'); process.exit(1); }
+frames.sort((a, b) => a.rel - b.rel);
+console.log(`  captured ${frames.length} frames (~${(frames.length / END).toFixed(1)} fps avg)`);
 
-// video filter: gradconvert smooths gradient banding without adding visible
-// grain. deband only (no temporal noise — that was what looked "noisy").
-// format pins yuv420p for universal playback.
+// --- assemble frames on their REAL timeline (concat demuxer w/ per-frame dur) --
+const usable = frames.filter(f => f.rel <= END + 0.1);
+let concat = 'ffconcat version 1.0\n';
+for (let i = 0; i < usable.length; i++) {
+  const dur = i < usable.length - 1 ? usable[i + 1].rel - usable[i].rel : 1 / FPS;
+  concat += `file '${usable[i].file.replace(/'/g, "'\\''")}'\nduration ${Math.max(0.001, dur).toFixed(4)}\n`;
+}
+concat += `file '${usable[usable.length - 1].file.replace(/'/g, "'\\''")}'\n`;
+const listFile = path.join(TMP, 'frames.txt');
+writeFileSync(listFile, concat);
+
+// --- encode: de-band, full length, mux audio ---------------------------------
+let ffmpeg = process.env.FFMPEG || 'ffmpeg';
 const VF = 'deband=1thr=0.012:2thr=0.012:3thr=0.012:4thr=0.012:range=22:blur=1,format=yuv420p';
-
-// trim the lead-in so the video starts exactly at the animation's first frame
-// (this removes the white flash AND lines the visuals up with the voiceover)
-const args = ['-y', '-ss', LEAD.toFixed(3), '-i', recFile];
-const fc = [`[0:v]${VF}[v]`];
+const args = ['-y', '-f', 'concat', '-safe', '0', '-i', listFile];
+const fc = [`[0:v]fps=${FPS},${VF}[v]`];
 const maps = ['-map', '[v]'];
-console.log(`  trimming ${LEAD.toFixed(2)}s lead-in`);
 let hasAudio = false;
 if (VO && BGM) {
-  args.push('-i', VO, '-stream_loop', '-1', '-i', BGM);   // loop music to fill the tail
+  args.push('-i', VO, '-stream_loop', '-1', '-i', BGM);
   fc.push('[1:a]volume=1.0[vo]', '[2:a]volume=0.28[bg]',
           '[vo][bg]amix=inputs=2:duration=longest:dropout_transition=0:normalize=0,apad[a]');
   maps.push('-map', '[a]'); hasAudio = true;
 } else if (VO) {
   args.push('-i', VO);
-  fc.push('[1:a]volume=1.0,apad[a]');                       // pad VO with silence to full length
+  fc.push('[1:a]volume=1.0,apad[a]');
   maps.push('-map', '[a]'); hasAudio = true;
 }
 args.push(
@@ -158,11 +162,11 @@ args.push(
   ...maps,
   '-c:v', 'libx264', '-crf', '16', '-preset', 'slow',
   '-x264-params', 'aq-mode=3:aq-strength=1.0',
-  '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
+  '-pix_fmt', 'yuv420p', '-r', String(FPS), '-movflags', '+faststart',
   ...(hasAudio ? ['-c:a', 'aac', '-b:a', '192k'] : ['-an']),
-  '-t', END.toFixed(3), OUT,                                // full animation length, not the VO length
+  '-t', END.toFixed(3), OUT,
 );
-console.log('Encoding (de-band + dither)…');
+console.log('Encoding (de-band)…');
 const r = spawnSync(ffmpeg, args, { stdio: 'inherit' });
 if (r.error) console.error('\nffmpeg failed. Set FFMPEG=/path/to/ffmpeg or install ffmpeg.\n', r.error.message);
 else console.log('\nDone → ' + OUT);
