@@ -443,11 +443,11 @@ const vidWasActive=vidEls.map(()=>false);
 function updateVideoBg(now){
   VID_SCHEDULE.forEach((sch,i)=>{
     const active=now>=sch.start&&now<sch.end;
-    if(active&&!vidWasActive[i]){
+    if(active&&!vidWasActive[i]&&playing){
       try{vidEls[i].currentTime=0;}catch(e){}
       vidEls[i].play().catch(()=>{});
     }
-    vidWasActive[i]=active;
+    if(playing)vidWasActive[i]=active;
     vidEls[i].classList.toggle('active',active);
   });
 }
