@@ -216,7 +216,7 @@ body.ui-hidden .hint{opacity:0;pointer-events:none;transition:opacity .3s ease;}
       <source src="/assets/DTS_OFF_GRID_Joey_Bania_Clips_ID410.mp4" type="video/mp4">
     </video>
     <video id="vid3" muted playsinline preload="auto" loop>
-      <source src="/assets/DTS_MISC_(JOEY_VIDEOS)__Joey_Bania_Clips_ID629.mp4" type="video/mp4">
+      <source src="/assets/DTS_MISC_%28JOEY_VIDEOS%29__Joey_Bania_Clips_ID629.mp4" type="video/mp4">
     </video>
   </div>
 
@@ -443,11 +443,11 @@ const vidWasActive=vidEls.map(()=>false);
 function updateVideoBg(now){
   VID_SCHEDULE.forEach((sch,i)=>{
     const active=now>=sch.start&&now<sch.end;
-    if(active&&!vidWasActive[i]){
+    if(active&&!vidWasActive[i]&&playing){
       try{vidEls[i].currentTime=0;}catch(e){}
       vidEls[i].play().catch(()=>{});
     }
-    vidWasActive[i]=active;
+    if(playing)vidWasActive[i]=active;
     vidEls[i].classList.toggle('active',active);
   });
 }
