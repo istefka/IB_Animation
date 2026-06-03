@@ -38,8 +38,11 @@ const srcOf = (id) => {
   const m = html.match(new RegExp(`<audio[^>]*id=["']${id}["'][^>]*src=["']([^"']+)["']`, 'i'));
   if (!m) return null;
   const rel = m[1].replace(/^\//, '');            // "/assets/x.mp3" -> "assets/x.mp3"
-  const p = path.join(ROOT, rel);
-  return existsSync(p) ? p : null;
+  for (const base of [ROOT, path.join(ROOT, 'public')]) {   // check root AND public/
+    const p = path.join(base, rel);
+    if (existsSync(p)) return p;
+  }
+  return null;
 };
 const VO = srcOf('vo');
 const BGM = srcOf('bgm');
