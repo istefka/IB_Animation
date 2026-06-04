@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "export": "node scripts/record.mjs index.html",
+    "export:footage": "node scripts/record.mjs FootageX/index.html"
   },
   "devDependencies": {
     "vite": "^5.4.0"

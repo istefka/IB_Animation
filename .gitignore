@@ -1,5 +1,12 @@
-# build / intermediate artifacts (regenerable)
+# build / render output (regenerable)
 build/
+dist/
 scripts/_audio_build/
+
+# deps
 node_modules/
+
+# os / editor junk
+.DS_Store
+**/.DS_Store
 *.log
